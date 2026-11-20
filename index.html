@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4e1025"><title>Magic Events & Decorators</title>
+<style>
+:root{--wine:#4e1025;--wine2:#741d39;--gold:#d8b46b;--cream:#fff8f1;--ink:#281b20;--muted:#85757b}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:2;background:rgba(78,16,37,.97);color:white;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 18px #1d0c1420}
+.logo{height:43px;width:43px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:17px}
+.brand small{display:block;color:var(--gold);letter-spacing:2.5px;font-size:10px;font-weight:800}.brand strong{font-size:17px}
+main{max-width:680px;margin:auto;padding:15px 16px 92px}
+.hero{background:linear-gradient(140deg,#3c0c1e,#812543);border-radius:24px;padding:25px 22px;color:white;min-height:220px;position:relative;overflow:hidden}
+.hero:after{content:"✦";position:absolute;right:18px;top:8px;color:#d8b46b70;font-size:100px}
+.eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;font-weight:800}
+.hero h1{font-size:28px;line-height:1.13;margin:12px 0;max-width:260px}.hero p{color:#f1dfe4;max-width:260px;font-size:14px}
+.btn{display:inline-block;border:0;border-radius:13px;padding:13px 17px;font-weight:800;text-decoration:none;background:var(--gold);color:var(--wine);cursor:pointer}.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.heading{display:flex;justify-content:space-between;align-items:center;margin:23px 2px 12px}.heading h2{margin:0;color:var(--wine);font-size:19px}.heading span{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{background:white;border-radius:17px;padding:15px;box-shadow:0 4px 14px #3912200b;min-height:115px;border:1px solid #f1e6de}
+.tile .emoji{font-size:27px}.tile b{display:block;margin-top:7px;color:var(--wine)}.tile small{color:var(--muted)}
+.promo{background:#f0e4d4;border-radius:17px;padding:16px;margin-top:15px;color:var(--wine)}
+.screen{display:none}.screen.active{display:block}
+.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.photo{height:150px;border-radius:17px;padding:12px;color:white;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#7d2b48,#e4b96d)}
+.photo:nth-child(2){background:linear-gradient(135deg,#7a4759,#f4c2b0)}.photo:nth-child(3){background:linear-gradient(135deg,#39514d,#d8ba79)}.photo:nth-child(4){background:linear-gradient(135deg,#58345c,#e5b96d)}.photo:nth-child(5){background:linear-gradient(135deg,#5a182a,#d98c87)}.photo:nth-child(6){background:linear-gradient(135deg,#45476a,#b7a0ca)}
+.photo strong{font-size:16px}.photo small{color:#fffddf}
+form{background:white;border-radius:18px;padding:17px;box-shadow:0 4px 14px #3912200b}
+label{display:block;margin:12px 0 5px;font-size:13px;font-weight:750;color:var(--wine)}
+input,select,textarea{width:100%;border:1px solid #e5d8cf;background:#fffdfb;border-radius:11px;padding:12px;font:inherit;color:var(--ink)}
+textarea{min-height:85px}form .btn{width:100%;margin-top:17px;background:var(--wine);color:white}
+.package{background:white;padding:15px;border-radius:17px;margin:10px 0;border:1px solid #f1e6de}.package h3{margin:0 0 7px;color:var(--wine)}.package p{margin:0;color:var(--muted);font-size:14px}
+.contact-card{background:white;border-radius:16px;padding:17px;margin:12px 0}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:3;background:white;border-top:1px solid #eee3db;display:flex;justify-content:center}
+.nav{max-width:680px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 4px}
+.nav button{background:transparent;border:0;color:#85757b;padding:7px 2px;font-size:11px;font-weight:700}
+.nav button span{display:block;font-size:19px;margin-bottom:2px}.nav button.active{color:var(--wine)}
+.footnote{text-align:center;color:#958990;font-size:11px;padding:22px}
+</style><link rel="manifest" href="./manifest.json"></head><body>
+<header><button id="langBtn" onclick="toggleLang()" style="margin-left:auto;order:3;border:1px solid #d8b46b;border-radius:9px;background:transparent;color:#e6c477;padding:8px;font-weight:bold">मराठी</button><div class="logo">M</div><div class="brand"><small>MAGIC</small><strong>Events & Decorators</strong></div></header>
+<main>
+<section id="home" class="screen active">
+<div class="hero"><div class="eyebrow">MAKE EVERY MOMENT MAGIC</div><h1>Celebrate beautifully.<br>Remember forever.</h1><p>Thoughtful event planning & dreamy decorations for your special moments.</p><button class="btn" onclick="navigate('book')">Book your celebration →</button></div>
+<div class="heading"><h2>Explore our services</h2><span>Made with love ✦</span></div>
+<div class="grid">
+<div class="tile"><div class="emoji">💍</div><b>Wedding & Mandap</b><small>Dream wedding décor</small></div>
+<div class="tile"><div class="emoji">🎂</div><b>Birthday Parties</b><small>Fun themed setups</small></div>
+<div class="tile"><div class="emoji">🍼</div><b>Baby Shower</b><small>Sweet welcome moments</small></div>
+<div class="tile"><div class="emoji">🌸</div><b>Anniversary</b><small>Romantic celebrations</small></div>
+<div class="tile"><div class="emoji">🚘</div><b>Car Decoration</b><small>Special occasion styling</small></div>
+<div class="tile"><div class="emoji">🎤</div><b>Sound & Catering</b><small>Event essentials</small></div>
+</div>
+<div class="promo"><strong>Planning something special?</strong><p>Tell us your date and idea. We'll help make it happen.</p><button class="btn" onclick="navigate('book')">Request a quote</button></div>
+</section>
+<section id="services" class="screen">
+<div class="heading"><h2>Services & packages</h2></div>
+<div class="package"><h3>Wedding Planning & Décor</h3><p>Stage, mandap, entrance, floral styling, lighting and coordination. Custom quote on request.</p></div>
+<div class="package"><h3>Birthday & Theme Party</h3><p>Balloon décor, backdrop, cake table and personalized themes.</p></div>
+<div class="package"><h3>Baby Shower / Baby Welcome</h3><p>Soft themes, name boards, balloon décor and photo backdrop.</p></div>
+<div class="package"><h3>Anniversary / Kitty / Corporate</h3><p>Elegant event setups customized to your occasion and venue.</p></div>
+<div class="package"><h3>Additional Services</h3><p>Catering, sound system, lights, anchor, photographer, mehndi and makeup artist arrangements.</p></div>
+<p class="promo">Pricing is customized based on event type, venue, date, design and requirements. Request a quotation to get details.</p><button class="btn" onclick="navigate('book')">Get a quotation</button>
+</section>
+<section id="gallery" class="screen">
+<div class="heading"><h2>Inspiration gallery</h2></div><p style="color:var(--muted)">Browse our event styles. Sample gallery tiles—replace with your actual Magic Events photos.</p>
+<div class="photo-grid"><div class="photo"><strong>Wedding Stage</strong><small>Elegant & grand</small></div><div class="photo"><strong>Birthday Theme</strong><small>Fun & colorful</small></div><div class="photo"><strong>Baby Shower</strong><small>Soft & dreamy</small></div><div class="photo"><strong>Mandap décor</strong><small>Traditional beauty</small></div><div class="photo"><strong>Engagement</strong><small>Romantic setting</small></div><div class="photo"><strong>Special Events</strong><small>Custom concepts</small></div></div>
+<button class="btn" style="margin-top:15px" onclick="navigate('book')">Book a similar setup</button>
+</section>
+<section id="book" class="screen">
+<div class="heading"><h2>Book / Request a quote</h2></div><p style="color:var(--muted)">Share your celebration details and we'll contact you.</p>
+<form id="bookingForm">
+<label>Full name *</label><input id="name" required placeholder="Your name">
+<label>Phone number *</label><input id="phone" required inputmode="tel" placeholder="Mobile number">
+<label>Choose event *</label><select id="type" required><option value="">Select event</option><option>Wedding</option><option>Birthday</option><option>Baby Shower</option><option>Baby Welcome</option><option>Anniversary</option><option>Kitty Party</option><option>Theme Party</option><option>Corporate Event</option><option>Car Decoration</option><option>Other</option></select>
+<label>Event date</label><input id="date" type="date">
+<label>Event location / venue</label><input id="venue" placeholder="Venue or area">
+<label>Guest count (approx.)</label><input id="guests" type="number" min="1" placeholder="Number of guests">
+<label>Budget (optional)</label><input id="budget" placeholder="Your approximate budget">
+<label>Describe your requirements</label><textarea id="details" placeholder="Theme, colors, services you need…"></textarea>
+<button class="btn" type="submit">Send enquiry via WhatsApp</button>
+</form>
+</section>
+<section id="contact" class="screen">
+<div class="heading"><h2>Contact & connect</h2></div><div class="contact-card"><h3 style="color:var(--wine)">Magic Events & Decorators</h3><p>Kale Brothers</p><p>Wedding planner · Event decoration · Catering · Sound & lights</p></div>
+<a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:9762627656">☎ Call 9762627656</a>
+<a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:7040453659">☎ Call 7040453659</a>
+<a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:8669262653">☎ Call 8669262653</a>
+<a class="btn" style="display:block;text-align:center;margin:9px 0" href="https://wa.me/919762627656">WhatsApp us</a>
+</section>
+<div class="footnote">Magic Events & Decorators · Making celebrations memorable</div>
+</main>
+<div class="bottom"><div class="nav">
+<button class="active" onclick="navigate('home',this)"><span>⌂</span>Home</button>
+<button onclick="navigate('services',this)"><span>✦</span>Services</button>
+<button onclick="navigate('gallery',this)"><span>▧</span>Gallery</button>
+<button onclick="navigate('book',this)"><span>＋</span>Book</button>
+<button onclick="navigate('contact',this)"><span>☎</span>Contact</button>
+</div></div>
+<script>
+function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
+document.getElementById('bookingForm').addEventListener('submit',e=>{e.preventDefault();const data={name:document.getElementById('name').value,phone:document.getElementById('phone').value,type:document.getElementById('type').value,date:document.getElementById('date').value,venue:document.getElementById('venue').value,guests:document.getElementById('guests').value,budget:document.getElementById('budget').value,details:document.getElementById('details').value};const text=`Magic Events customer enquiry\nName: ${data.name}\nCustomer phone: ${data.phone}\nEvent: ${data.type}\nDate: ${data.date}\nVenue: ${data.venue}\nGuests: ${data.guests}\nBudget: ${data.budget}\nRequirements: ${data.details}`;window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank')});
+</script>
+<script>
+let marathi=false;
+function toggleLang(){
+ marathi=!marathi;
+ document.getElementById('langBtn').textContent=marathi?'English':'मराठी';
+ const labels=marathi?['मुख्यपृष्ठ','सेवा','गॅलरी','बुकिंग','संपर्क']:['Home','Services','Gallery','Book','Contact'];
+ document.querySelectorAll('.nav button').forEach((b,i)=>{const icons=b.querySelector('span').textContent;b.innerHTML='<span>'+icons+'</span>'+labels[i]});
+ const heroTitle=document.querySelector('.hero h1');
+ heroTitle.innerHTML=marathi?'तुमचा आनंदाचा दिवस<br>अविस्मरणीय बनवा.':'Celebrate beautifully.<br>Remember forever.';
+ document.querySelector('.hero .eyebrow').textContent=marathi?'प्रत्येक क्षण खास बनवा':'MAKE EVERY MOMENT MAGIC';
+ document.querySelector('.hero p').textContent=marathi?'तुमच्या खास क्षणांसाठी सुंदर सजावट आणि कार्यक्रम नियोजन.':'Thoughtful event planning & dreamy decorations for your special moments.';
+ document.querySelector('.hero .btn').textContent=marathi?'बुकिंग करा →':'Book your celebration →';
+ document.querySelector('#home .heading h2').textContent=marathi?'आमच्या सेवा':'Explore our services';
+ document.querySelector('#services .heading h2').textContent=marathi?'सेवा आणि पॅकेजेस':'Services & packages';
+ document.querySelector('#gallery .heading h2').textContent=marathi?'फोटो गॅलरी':'Inspiration gallery';
+ document.querySelector('#book .heading h2').textContent=marathi?'बुकिंग / दर विचारणा':'Book / Request a quote';
+ document.querySelector('#contact .heading h2').textContent=marathi?'संपर्क करा':'Contact & connect';
+ document.querySelector('#bookingForm button').textContent=marathi?'WhatsApp वर चौकशी पाठवा':'Send enquiry via WhatsApp';
+}
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>

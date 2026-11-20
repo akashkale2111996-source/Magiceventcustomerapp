@@ -1,0 +1,16 @@
+{
+  "name": "Magic Events & Decorators",
+  "short_name": "Magic Events",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff8f1",
+  "theme_color": "#4e1025",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
