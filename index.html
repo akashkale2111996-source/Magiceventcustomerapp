@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#4e1025"><title>Magic Events & Decorators</title>
+<meta name="theme-color" content="#8b3c61"><title>Magic Events & Decorators</title>
 <style>
-:root{--wine:#4e1025;--wine2:#741d39;--gold:#d8b46b;--cream:#fff8f1;--ink:#281b20;--muted:#85757b}
+:root{--wine:#7d365a;--wine2:#a85d7c;--gold:#c99a82;--cream:#fff7f8;--ink:#39252f;--muted:#8c747f}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{position:sticky;top:0;z-index:2;background:rgba(78,16,37,.97);color:white;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 18px #1d0c1420}
+header{position:sticky;top:0;z-index:2;background:rgba(92,34,61,.97);color:white;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 18px #1d0c1420}
 .logo{height:43px;width:43px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:17px}
 .brand small{display:block;color:var(--gold);letter-spacing:2.5px;font-size:10px;font-weight:800}.brand strong{font-size:17px}
 main{max-width:680px;margin:auto;padding:15px 16px 92px}
-.hero{background:linear-gradient(140deg,#3c0c1e,#812543);border-radius:24px;padding:25px 22px;color:white;min-height:220px;position:relative;overflow:hidden}
-.hero:after{content:"✦";position:absolute;right:18px;top:8px;color:#d8b46b70;font-size:100px}
+.hero{background:linear-gradient(140deg,#59213b,#a04e70);border-radius:24px;padding:25px 22px;color:white;min-height:220px;position:relative;overflow:hidden}
+.hero:after{content:"✦";position:absolute;right:18px;top:8px;color:#e8b9c770;font-size:100px}
 .eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;font-weight:800}
 .hero h1{font-size:28px;line-height:1.13;margin:12px 0;max-width:260px}.hero p{color:#f1dfe4;max-width:260px;font-size:14px}
 .btn{display:inline-block;border:0;border-radius:13px;padding:13px 17px;font-weight:800;text-decoration:none;background:var(--gold);color:var(--wine);cursor:pointer}.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
 .heading{display:flex;justify-content:space-between;align-items:center;margin:23px 2px 12px}.heading h2{margin:0;color:var(--wine);font-size:19px}.heading span{font-size:12px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.tile{background:white;border-radius:17px;padding:15px;box-shadow:0 4px 14px #3912200b;min-height:115px;border:1px solid #f1e6de}
+.tile{background:white;border-radius:17px;padding:15px;box-shadow:0 4px 14px #3912200b;min-height:115px;border:1px solid #f0dfe5}
 .tile .emoji{font-size:27px}.tile b{display:block;margin-top:7px;color:var(--wine)}.tile small{color:var(--muted)}
-.promo{background:#f0e4d4;border-radius:17px;padding:16px;margin-top:15px;color:var(--wine)}
+.promo{background:#f5e4e8;border-radius:17px;padding:16px;margin-top:15px;color:var(--wine)}
 .screen{display:none}.screen.active{display:block}
 .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.photo{height:150px;border-radius:17px;padding:12px;color:white;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#7d2b48,#e4b96d);position:relative;overflow:hidden}.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.photo strong,.photo small{position:relative;z-index:1;text-shadow:0 2px 5px #000}.photo:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.75));z-index:0}
-.photo:nth-child(2){background:linear-gradient(135deg,#7a4759,#f4c2b0)}.photo:nth-child(3){background:linear-gradient(135deg,#39514d,#d8ba79)}.photo:nth-child(4){background:linear-gradient(135deg,#58345c,#e5b96d)}.photo:nth-child(5){background:linear-gradient(135deg,#5a182a,#d98c87)}.photo:nth-child(6){background:linear-gradient(135deg,#45476a,#b7a0ca)}
+.photo{height:150px;border-radius:17px;padding:12px;color:white;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#8d4167,#d7a99a)}
+.photo:nth-child(2){background:linear-gradient(135deg,#b66d8d,#f1c6d2)}.photo:nth-child(3){background:linear-gradient(135deg,#806b79,#d9b7a8)}.photo:nth-child(4){background:linear-gradient(135deg,#79506f,#ddb6c7)}.photo:nth-child(5){background:linear-gradient(135deg,#873c5f,#e5a4a6)}.photo:nth-child(6){background:linear-gradient(135deg,#705c7b,#c5a6bb)}
 .photo strong{font-size:16px}.photo small{color:#fffddf}
 form{background:white;border-radius:18px;padding:17px;box-shadow:0 4px 14px #3912200b}
 label{display:block;margin:12px 0 5px;font-size:13px;font-weight:750;color:var(--wine)}
-input,select,textarea{width:100%;border:1px solid #e5d8cf;background:#fffdfb;border-radius:11px;padding:12px;font:inherit;color:var(--ink)}
+input,select,textarea{width:100%;border:1px solid #e9cfd9;background:#fffafb;border-radius:11px;padding:12px;font:inherit;color:var(--ink)}
 textarea{min-height:85px}form .btn{width:100%;margin-top:17px;background:var(--wine);color:white}
-.package{background:white;padding:15px;border-radius:17px;margin:10px 0;border:1px solid #f1e6de}.package h3{margin:0 0 7px;color:var(--wine)}.package p{margin:0;color:var(--muted);font-size:14px}
+.package{background:white;padding:15px;border-radius:17px;margin:10px 0;border:1px solid #f0dfe5}.package h3{margin:0 0 7px;color:var(--wine)}.package p{margin:0;color:var(--muted);font-size:14px}
 .contact-card{background:white;border-radius:16px;padding:17px;margin:12px 0}
 .bottom{position:fixed;bottom:0;left:0;right:0;z-index:3;background:white;border-top:1px solid #eee3db;display:flex;justify-content:center}
 .nav{max-width:680px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 4px}
@@ -61,8 +61,8 @@ textarea{min-height:85px}form .btn{width:100%;margin-top:17px;background:var(--w
 <p class="promo">Pricing is customized based on event type, venue, date, design and requirements. Request a quotation to get details.</p><button class="btn" onclick="navigate('book')">Get a quotation</button>
 </section>
 <section id="gallery" class="screen">
-<div class="heading"><h2>Magic Events Gallery</h2></div><p style="color:var(--muted)">Real event decoration work by Magic Events & Decorators.</p>
-<div class="photo-grid"><div class="photo"><img src="./gallery1.jpg" loading="lazy" alt="Magic Events decoration photo 1"><strong>Wedding Stage</strong><small>Floral & traditional</small></div><div class="photo"><img src="./gallery2.jpg" loading="lazy" alt="Magic Events decoration photo 2"><strong>Baby Welcome</strong><small>Krishna theme</small></div><div class="photo"><img src="./gallery3.jpg" loading="lazy" alt="Magic Events decoration photo 3"><strong>Wedding Setup</strong><small>Flower décor</small></div><div class="photo"><img src="./gallery4.jpg" loading="lazy" alt="Magic Events decoration photo 4"><strong>Haldi Rangoli</strong><small>Traditional design</small></div><div class="photo"><img src="./gallery5.jpg" loading="lazy" alt="Magic Events decoration photo 5"><strong>Birthday Party</strong><small>Balloon décor</small></div><div class="photo"><img src="./gallery6.jpg" loading="lazy" alt="Magic Events decoration photo 6"><strong>Wedding Backdrop</strong><small>Peacock theme</small></div><div class="photo"><img src="./gallery7.jpg" loading="lazy" alt="Magic Events decoration photo 7"><strong>Baby Birthday</strong><small>Colorful balloons</small></div><div class="photo"><img src="./gallery8.jpg" loading="lazy" alt="Magic Events decoration photo 8"><strong>Car Decoration</strong><small>Flower car décor</small></div><div class="photo"><img src="./gallery9.jpg" loading="lazy" alt="Magic Events decoration photo 9"><strong>Car Decoration</strong><small>Floral styling</small></div><div class="photo"><img src="./gallery10.jpg" loading="lazy" alt="Magic Events decoration photo 10"><strong>Car Decoration</strong><small>Premium setup</small></div></div>
+<div class="heading"><h2>Inspiration gallery</h2></div><p style="color:var(--muted)">Browse our event styles. Sample gallery tiles—replace with your actual Magic Events photos.</p>
+<div class="photo-grid"><div class="photo"><strong>Wedding Stage</strong><small>Elegant & grand</small></div><div class="photo"><strong>Birthday Theme</strong><small>Fun & colorful</small></div><div class="photo"><strong>Baby Shower</strong><small>Soft & dreamy</small></div><div class="photo"><strong>Mandap décor</strong><small>Traditional beauty</small></div><div class="photo"><strong>Engagement</strong><small>Romantic setting</small></div><div class="photo"><strong>Special Events</strong><small>Custom concepts</small></div></div>
 <button class="btn" style="margin-top:15px" onclick="navigate('book')">Book a similar setup</button>
 </section>
 <section id="book" class="screen">
