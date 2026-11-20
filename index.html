@@ -118,9 +118,18 @@ function selectPhoto(src){
   selectedPhoto=src;
   bookNow(albumData[currentAlbum].book);
 }
-function closeAlbum(){document.getElementById('album-view').style.display='none';document.querySelector('.album-grid').style.display='grid';currentAlbum='';document.getElementById('gallery').scrollIntoView({behavifunction bookAlbumStyle(){if(currentAlbum)bookNow(albumData[currentAlbum].book);}
-
-function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
+ function closeAlbum(){
+  document.getElementById('album-view').style.display='none';
+  document.querySelector('.album-grid').style.display='grid';
+  currentAlbum='';
+  document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
+ }
+function bookAlbumStyle(){
+  if(currentAlbum){
+    bookNow(albumData[currentAlbum].book);
+  }
+}
+  function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
 function bookNow(eventType){const selector=document.getElementById('type');if(selector){selector.value=eventType; if(!selector.value)selector.value='Other';}navigate('book')}
 document.getElementById('bookingForm').addEventListener('submit',e=>{e.preventDefault();const data={name:document.getElementById('name').value,phone:document.getElementById('phone').value,type:document.getElementById('type').value,date:document.getElementById('date').value,venue:document.getElementById('venue').value,guests:document.getElementById('guests').value,budget:document.getElementById('budget').value,details:document.getElementById('details').value};const text=`Magic Events customer enquiry\nName: ${data.name}\nCustomer phone: ${data.phone}\nEvent: ${data.type}\nDate: ${data.date}\nVenue: ${data.venue}\nGuests: ${data.guests}\nBudget: ${data.budget}\nRequirements: ${data.details}`;window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank')});
 let marathi=false;
