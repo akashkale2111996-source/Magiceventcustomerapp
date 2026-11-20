@@ -82,9 +82,43 @@ label{display:block;margin:12px 0 5px;font-size:13px;font-weight:750;color:var(-
 
 const albumData={birthday:{title:'🎂 Birthday Album',images:['gallery1.jpg','gallery2.jpg','gallery3.jpg'],videos:[],book:'Birthday'},wedding:{title:'💍 Wedding & Mandap Album',images:['gallery4.jpg','gallery5.jpg','gallery6.jpg','gallery7.jpg'],videos:[],book:'Wedding'},baby:{title:'👶 Baby Shower Album',images:['gallery8.jpg','gallery9.jpg'],videos:[],book:'Baby Shower'},car:{title:'🚘 Car Decoration Album',images:['gallery10.jpg','gallery1.jpg'],videos:[],book:'Car Decoration'},theme:{title:'🎉 Theme Party Album',images:['gallery2.jpg','gallery3.jpg'],videos:[],book:'Theme Party'},other:{title:'✨ Other Events Album',images:['gallery4.jpg','gallery5.jpg'],videos:[],book:'Other'}};
 let currentAlbum='';
-function openAlbum(id){currentAlbum=id;const data=albumData[id];document.getElementById('album-title').textContent=data.title;const box=document.getElementById('album-media');box.innerHTML=data.images.map(src=>`<img src="${src}" alt="Event photo" onclick="window.open(this.src,'_blank')">`).join('')+(data.videos||[]).map(src=>`<video controls playsinline preload="metadata" src="${src}" style="width:100%;border-radius:13px"></video>`).join('')+(data.videos&&data.videos.length?'':'<div class="album-note">Video clips will appear here after we add your videos to this album.</div>');document.querySelector('.album-grid').style.display='none';document.getElementById('album-view').style.display='block';document.getElementById('album-view').scrollIntoView({behavior:'smooth'});}
-function closeAlbum(){document.getElementById('album-view').style.display='none';document.querySelector('.album-grid').style.display='grid';currentAlbum='';document.getElementById('gallery').scrollIntoView({behavior:'smooth'});}
-function bookAlbumStyle(){if(currentAlbum)bookNow(albumData[currentAlbum].book);}
+let selectedDesign='';
+let selectedPhoto='';
+function openAlbum(id){
+  currentAlbum=id;
+  selectedPhoto='';
+  const data=albumData[id];
+
+  document.getElementById('album-title').textContent=data.title;
+
+  const box=document.getElementById('album-media');
+
+  box.innerHTML=data.images.map(src=>`
+    <div class="photo-item">
+      <img src="${src}" alt="Event photo"
+      onclick="selectPhoto('${src}')">
+      <button class="btn" onclick="selectPhoto('${src}')">
+        Book this design →
+      </button>
+    </div>
+  `).join('')+
+  (data.videos||[]).map(src=>`
+    <video controls playsinline preload="metadata"
+    src="${src}" style="width:100%;border-radius:13px">
+    </video>
+  `).join('');
+
+  document.querySelector('.album-grid').style.display='none';
+  document.getElementById('album-view').style.display='block';
+  document.getElementById('album-view')
+    .scrollIntoView({behavior:'smooth'});
+}
+
+function selectPhoto(src){
+  selectedPhoto=src;
+  bookNow(albumData[currentAlbum].book);
+}
+function closeAlbum(){document.getElementById('album-view').style.display='none';document.querySelector('.album-grid').style.display='grid';currentAlbum='';document.getElementById('gallery').scrollIntoView({behavifunction bookAlbumStyle(){if(currentAlbum)bookNow(albumData[currentAlbum].book);}
 
 function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
 function bookNow(eventType){const selector=document.getElementById('type');if(selector){selector.value=eventType; if(!selector.value)selector.value='Other';}navigate('book')}
