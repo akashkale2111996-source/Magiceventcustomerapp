@@ -118,7 +118,26 @@ function selectPhoto(src){
   selectedPhoto=src;
   bookNow(albumData[currentAlbum].book);
 }
- function closeAlbum(){
+async function sharePhoto(src){
+  try{
+    const response=await fetch(src);
+    const blob=await response.blob();
+    const file=new File([blob],'Magic-Events-Design.jpg',{type:blob.type||'image/jpeg'});
+
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        files:[file],
+        title:'Magic Events Design',
+        text:'Selected decoration design from Magic Events & Decorators'
+      });
+    }else{
+      alert('Photo sharing is not supported on this device.');
+    }
+  }catch(error){
+    alert('Photo share failed. Please try again.');
+  }
+} 
+  function closeAlbum(){
   document.getElementById('album-view').style.display='none';
   document.querySelector('.album-grid').style.display='grid';
   currentAlbum='';
@@ -131,8 +150,49 @@ function bookAlbumStyle(){
 }
   function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
 function bookNow(eventType){const selector=document.getElementById('type');if(selector){selector.value=eventType; if(!selector.value)selector.value='Other';}navigate('book')}
-document.getElementById('bookingForm').addEventListener('submit',e=>{e.preventDefault();const data={name:document.getElementById('name').value,phone:document.getElementById('phone').value,type:document.getElementById('type').value,date:document.getElementById('date').value,venue:document.getElementById('venue').value,guests:document.getElementById('guests').value,budget:document.getElementById('budget').value,details:document.getElementById('details').value};const text=`Magic Events customer enquiry\nName: ${data.name}\nCustomer phone: ${data.phone}\nEvent: ${data.type}\nDate: ${data.date}\nVenue: ${data.venue}\nGuests: ${data.guests}\nBudget: ${data.budget}\nRequirements: ${data.details}`;window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank')});
-let marathi=false;
+document.getElementById('bookingForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  const data={
+    name:document.getElementById('name').value,
+    phone:document.getElementById('phone').value,
+    type:document.getElementById('type').value,
+    date:document.getElementById('date').value,
+    venue:document.getElementById('venue').value,
+    guests:document.getElementById('guests').value,
+    budget:document.getElementById('budget').value,
+    details:document.getElementById('details').value
+  };
+
+  const text=`Magic Events customer enquiry
+Name: ${data.name}
+Customer phone: ${data.phone}
+Event: ${data.type}
+Date: ${data.date}
+Venue: ${data.venue}
+Guests: ${data.guests}
+Budget: ${data.budget}
+Requirements: ${data.details}`;
+
+  try{
+    if(selectedPhoto){
+      const response=await fetch(selectedPhoto);
+      const blob=await response.blob();
+      const file=new File([blob],'Selected-Design.jpg',{type:blob.type||'image/jpeg'});
+
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],text:text,title:'Magic Events Booking'});
+      }else{
+        window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank');
+      }
+    }else{
+      window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank');
+    }
+  }catch(error){
+    alert('Sharing cancelled or failed. Please try again.');
+  }
+});
+  marathi=false;
 function toggleLang(){marathi=!marathi;document.getElementById('langBtn').textContent=marathi?'English':'मराठी';const labels=marathi?['मुख्यपृष्ठ','सेवा','गॅलरी','बुकिंग','संपर्क']:['Home','Services','Gallery','Book','Contact'];document.querySelectorAll('.nav button').forEach((b,i)=>{const icons=b.querySelector('span').textContent;b.innerHTML='<span>'+icons+'</span>'+labels[i]});const heroTitle=document.querySelector('.hero h1');heroTitle.innerHTML=marathi?'तुमचा आनंदाचा दिवस<br>अविस्मरणीय बनवा.':'Celebrate beautifully.<br>Remember forever.';document.querySelector('.hero .eyebrow').textContent=marathi?'प्रत्येक क्षण खास बनवा':'MAKE EVERY MOMENT MAGIC';document.querySelector('.hero p').textContent=marathi?'तुमच्या खास क्षणांसाठी सुंदर सजावट आणि कार्यक्रम नियोजन.':'Thoughtful event planning & dreamy decorations for your special moments.';document.querySelector('.hero .btn').textContent=marathi?'बुकिंग करा →':'Book your celebration →';document.querySelector('#home .heading h2').textContent=marathi?'आमच्या सेवा':'Explore our services';document.querySelector('#services .heading h2').textContent=marathi?'सेवा आणि पॅकेजेस':'Services & packages';document.querySelector('#gallery .heading h2').textContent=marathi?'फोटो गॅलरी':'Inspiration gallery';document.querySelector('#book .heading h2').textContent=marathi?'बुकिंग / दर विचारणा':'Book / Request a quote';document.querySelector('#contact .heading h2').textContent=marathi?'संपर्क करा':'Contact & connect';document.querySelector('#bookingForm button').textContent=marathi?'WhatsApp वर चौकशी पाठवा':'Send enquiry via WhatsApp';}
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>
