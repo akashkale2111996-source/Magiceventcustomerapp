@@ -116,7 +116,7 @@ function openAlbum(id){
     .scrollIntoView({behavior:'smooth'});
 }
 
-function selectPhoto(src) {
+ function selectPhoto(src) {
   selectedPhoto = src;
 
   document.getElementById('photoPreviewModal')?.remove();
@@ -147,11 +147,11 @@ function selectPhoto(src) {
       style="max-width:100%;max-height:75vh;
       object-fit:contain;border-radius:12px;">
 
-    <button id="photoWhatsAppEnquiry"
-      style="margin-top:20px;padding:15px 25px;
-      background:#25D366;color:white;border:none;
-      border-radius:30px;font-size:17px;font-weight:bold;">
-      💬 Enquire on WhatsApp
+    <button id="photoBookNow"
+      style="margin-top:20px;padding:15px 30px;
+      background:#c2185b;color:white;border:none;
+      border-radius:30px;font-size:18px;font-weight:bold;">
+      📅 Book Now
     </button>
   `;
 
@@ -161,19 +161,12 @@ function selectPhoto(src) {
     modal.remove();
   };
 
-  document.getElementById('photoWhatsAppEnquiry').onclick = () => {
-    const photoLink = new URL(src, window.location.href).href;
-
-    const message = `Hello Magic Events & Decorators!
-I am interested in this decoration design.
-Photo: ${photoLink}
-Please share details and price.`;
-
-    window.location.href =
-      'https://wa.me/919762627656?text=' +
-      encodeURIComponent(message);
+  document.getElementById('photoBookNow').onclick = () => {
+    modal.remove();
+    bookNow(albumData[currentAlbum].book);
   };
 }
+   
 async function sharePhoto(src){
   try{
     const response=await fetch(src);
