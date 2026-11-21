@@ -1,296 +1,791 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#8b3c61"><title>Magic Events & Decorators</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7d365a">
+<title>Magic Events & Decorators</title>
 <style>
-:root{--wine:#7d365a;--wine2:#a85d7c;--gold:#c99a82;--cream:#fff7f8;--ink:#39252f;--muted:#8c747f}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{position:sticky;top:0;z-index:2;background:rgba(92,34,61,.97);color:white;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 18px #1d0c1420}
-.logo{height:43px;width:43px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:17px}
-.brand small{display:block;color:var(--gold);letter-spacing:2.5px;font-size:10px;font-weight:800}.brand strong{font-size:17px}
-main{max-width:680px;margin:auto;padding:15px 16px 100px}
-.hero{background:linear-gradient(140deg,#59213b,#a04e70);border-radius:24px;padding:25px 22px;color:white;min-height:250px;position:relative;overflow:hidden;box-shadow:0 12px 25px #59213b22}
-.hero:after{content:"✦";position:absolute;right:18px;top:8px;color:#e8b9c770;font-size:100px;pointer-events:none}
-.eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;font-weight:800}
-.hero h1{font-size:28px;line-height:1.13;margin:12px 0;max-width:280px}.hero p{color:#f1dfe4;max-width:290px;font-size:14px;line-height:1.55}
-.btn{display:inline-block;border:0;border-radius:13px;padding:13px 17px;font-weight:800;text-decoration:none;background:var(--gold);color:var(--wine);cursor:pointer}.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
-.hero-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px;position:relative;z-index:1}
-.trustline{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.trustline span{font-size:11px;color:#f9e8ee;border:1px solid #ffffff35;background:#ffffff10;padding:6px 9px;border-radius:999px}
-.heading{display:flex;justify-content:space-between;align-items:center;margin:23px 2px 12px}.heading h2{margin:0;color:var(--wine);font-size:19px}.heading span{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.tile{background:white;border-radius:17px;padding:15px;box-shadow:0 4px 14px #3912200b;min-height:115px;border:1px solid #f0dfe5;cursor:pointer;transition:transform .15s}.tile:active{transform:scale(.98)}.tile .emoji{font-size:27px}.tile b{display:block;margin-top:7px;color:var(--wine)}.tile small{color:var(--muted)}
-.promo{background:#f5e4e8;border-radius:17px;padding:16px;margin-top:15px;color:var(--wine)}.promo p{margin:7px 0 12px}
-.home-feature{background:#fff;border:1px solid #f0dfe5;border-radius:18px;padding:15px;margin-top:14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 14px #39122008}.home-feature .feature-icon{width:48px;height:48px;border-radius:15px;background:#f5e4e8;display:grid;place-items:center;font-size:24px;flex-shrink:0}.home-feature strong{display:block;color:var(--wine);margin-bottom:3px}.home-feature p{font-size:13px;color:var(--muted);margin:0;line-height:1.45}
-.screen{display:none}.screen.active{display:block}.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.photo{height:150px;border-radius:17px;padding:12px;color:white;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#8d4167,#d7a99a)}
-.photo:nth-child(2){background:linear-gradient(135deg,#b66d8d,#f1c6d2)}.photo:nth-child(3){background:linear-gradient(135deg,#806b79,#d9b7a8)}.photo:nth-child(4){background:linear-gradient(135deg,#79506f,#ddb6c7)}.photo:nth-child(5){background:linear-gradient(135deg,#873c5f,#e5a4a6)}.photo:nth-child(6){background:linear-gradient(135deg,#705c7b,#c5a6bb)}
-.photo strong{font-size:16px}.photo small{color:#fffddf}
-.album-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
-.album-card{background:white;border:1px solid #f0dfe5;border-radius:18px;overflow:hidden;padding:9px;box-shadow:0 5px 15px #3912200b;cursor:pointer}
-.album-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;display:block;background:#f5e4e8}
-.album-name{color:var(--wine);font-weight:800;margin:9px 2px 3px;font-size:15px}.album-card small{color:var(--muted);margin-left:2px}
-.album-view{background:#fff;border:1px solid #f0dfe5;border-radius:18px;padding:14px;margin-top:16px}
-.album-view h3{color:var(--wine);margin:14px 0}.album-media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.album-media img{
-  width:100%;
-  aspect-ratio:1/1;
-  object-fit:cover;
-  border-radius:16px;
-  cursor:pointer;
-  box-shadow:0 4px 12px rgba(0,0,0,0.12);
-  transition:transform 0.2s ease;
+:root {
+  --wine:#7d365a;
+  --rose:#b45d83;
+  --cream:#fff8f5;
+  --ink:#281923;
+  --gold:#d6a84f;
+  --soft:#f4e7ee;
 }
-.album-media img:active{
-  transform:scale(0.97);
+* { box-sizing:border-box }
+body {
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--cream);
+  color:var(--ink);
 }
- .album-note{background:#f5e4e8;color:var(--wine);border-radius:12px;padding:12px;grid-column:1/-1;font-size:13px}
-@media(max-width:380px){.album-name{font-size:13px}}
-form{background:white;border-radius:18px;padding:17px;box-shadow:0 4px 14px #3912200b}
-label{display:block;margin:12px 0 5px;font-size:13px;font-weight:750;color:var(--wine)}input,select,textarea{width:100%;border:1px solid #e9cfd9;background:#fffafb;border-radius:11px;padding:12px;font:inherit;color:var(--ink)}textarea{min-height:85px}form .btn{width:100%;margin-top:17px;background:var(--wine);color:white}
-.package{background:white;padding:16px;border-radius:19px;margin:11px 0;border:1px solid #f0dfe5;box-shadow:0 5px 16px #3912200b;position:relative;overflow:hidden}.package h3{margin:0 0 7px;color:var(--wine);font-size:17px}.package p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}.package .service-icon{width:48px;height:48px;border-radius:15px;background:#f5e4e8;display:grid;place-items:center;font-size:25px;margin-bottom:10px}.package .service-tags{display:flex;flex-wrap:wrap;gap:6px;margin:11px 0}.package .service-tags span{font-size:11px;border:1px solid #ecd7df;background:#fffafb;color:var(--wine);padding:5px 8px;border-radius:999px}.package .service-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.package .service-actions .btn{padding:10px 13px;font-size:13px}.package .service-actions .btn-outline{border-color:#d9b5c3;color:var(--wine)}
-.contact-card{background:white;border-radius:16px;padding:17px;margin:12px 0}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:3;background:white;border-top:1px solid #eee3db;display:flex;justify-content:center}.nav{max-width:680px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 4px}.nav button{background:transparent;border:0;color:#85757b;padding:7px 2px;font-size:11px;font-weight:700}.nav button span{display:block;font-size:19px;margin-bottom:2px}.nav button.active{color:var(--wine)}.footnote{text-align:center;color:#958990;font-size:11px;padding:22px}
-</style><link rel="manifest" href="./manifest.json"></head><body>
-<header><img src="./icon-192.png" alt="Magic Events Logo"
-style="width:55px;height:55px;object-fit:contain;"><button id="langBtn" onclick="toggleLang()" style="margin-left:auto;order:3;border:1px solid #d8b46b;border-radius:9px;background:transparent;color:#e6c477;padding:8px;font-weight:bold">मराठी</button><div class="logo">M</div><div class="brand"><small>MAGIC</small><strong>Events & Decorators</strong></div></header>
+header {
+  position:sticky; top:0; z-index:20;
+  background:white; box-shadow:0 3px 15px #0001;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px;
+}
+.brand { font-weight:900; color:var(--wine); font-size:1.05rem }
+.brand small { display:block; font-size:.72rem; color:#72515f }
+button,.btn {
+  border:0; border-radius:12px; padding:11px 15px;
+  background:var(--wine); color:white; font-weight:700;
+  cursor:pointer; text-decoration:none; display:inline-block;
+}
+button.secondary,.btn.secondary { background:#f0e1e9; color:var(--wine) }
+button.gold { background:var(--gold); color:#30220c }
+section { padding:26px 16px; scroll-margin-top:70px }
+.wrap { max-width:980px; margin:auto }
+.hero {
+  background:linear-gradient(135deg,#7d365a,#b45d83);
+  color:white; padding:36px 18px;
+  border-radius:0 0 28px 28px; text-align:center;
+}
+.hero h1 { font-size:clamp(1.8rem,6vw,3rem); margin:8px 0 }
+.hero p { line-height:1.5 }
+.hero-actions {
+  display:flex; gap:10px; justify-content:center;
+  flex-wrap:wrap; margin-top:18px;
+}
+h2 { color:var(--wine); margin:0 0 16px }
+.cards {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:12px;
+}
+.card {
+  background:white; border-radius:16px; padding:14px;
+  box-shadow:0 4px 14px #0001;
+}
+.service { min-height:100px; display:flex; flex-direction:column; justify-content:space-between; gap:12px }
+.album-grid,.photo-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px;
+}
+.album { border-radius:15px; overflow:hidden; background:white; box-shadow:0 4px 12px #0001; cursor:pointer }
+.album img { width:100%; height:140px; object-fit:cover; background:var(--soft) }
+.album div { padding:10px; font-weight:700; color:var(--wine) }
+.photo-item { background:white; border-radius:14px; padding:8px; box-shadow:0 4px 12px #0001 }
+.photo-item img { width:100%; height:190px; object-fit:cover; border-radius:10px; cursor:pointer }
+.photo-item button { width:100%; margin-top:8px }
+.hidden { display:none!important }
+.panel { background:white; padding:16px; border-radius:18px; box-shadow:0 4px 16px #0001 }
+form { display:grid; gap:12px }
+input,select,textarea {
+  width:100%; padding:12px; border:1px solid #ddc9d4;
+  border-radius:10px; font:inherit; background:white;
+}
+label { font-weight:700; font-size:.9rem }
+label input,label select,label textarea { margin-top:5px; font-weight:400 }
+.price { font-size:1.3rem; font-weight:900; color:var(--wine) }
+.package { border:1px solid #ead6e1 }
+.package h3 { color:var(--wine); margin-top:0 }
+.modal {
+  position:fixed; inset:0; background:#000b; z-index:50;
+  display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.modal-box {
+  background:white; max-width:560px; width:100%;
+  border-radius:18px; padding:14px; max-height:90vh; overflow:auto;
+}
+.modal-box img { width:100%; max-height:60vh; object-fit:contain; border-radius:12px }
+footer { background:#341d2c; color:white; padding:24px 16px; text-align:center }
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; background:white;
+  border-top:1px solid #ead6e1; z-index:30;
+  display:flex; justify-content:space-around; padding:6px 3px;
+}
+.bottom-nav button {
+  background:transparent; color:var(--wine); padding:8px 4px;
+  font-size:.75rem; flex:1; border-radius:8px;
+}
+.bottom-nav button.active { background:var(--soft) }
+body { padding-bottom:66px }
+.note { color:#715a67; font-size:.85rem }
+.map-preview { height:250px; width:100%; border:0; border-radius:14px; margin-top:10px }
+.status { padding:9px 12px; border-radius:10px; background:#fff4d7; color:#6c4d00; font-weight:700 }
+.status.confirmed { background:#e3f4e9; color:#1e6a40 }
+@media(min-width:700px) {
+  header { padding:14px 6% }
+  .hero { padding:58px 24px }
+  section { padding:36px 20px }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">✨ Magic Events & Decorators
+    <small>Make every moment magical</small>
+  </div>
+  <button class="secondary" id="langBtn" onclick="toggleLanguage()">मराठी</button>
 </header>
+
 <main>
- <section id="home" class="screen active">
-<div class="hero"><div class="eyebrow">MAKE EVERY MOMENT MAGIC</div><h1>Celebrate beautifully.<br>Remember forever.</h1><p>Thoughtful event planning & dreamy decorations for your special moments. From the first idea to the final sparkle, let's make it memorable.</p><div class="hero-actions"><button class="btn" onclick="navigate('book')">Book your celebration →</button><button class="btn btn-outline" onclick="navigate('gallery')">Explore gallery</button></div><div class="trustline"><span>✦ Personalised décor</span><span>♡ Made with love</span></div></div>
-<div class="home-feature"><div class="feature-icon">✨</div><div><strong>Your celebration, your style</strong><p>Share your occasion, date and ideas—we'll help plan a setup that feels uniquely yours.</p></div></div>
-<div class="heading"><h2>Explore our services</h2><span>Made with love ✦</span></div>
-<div class="grid">
-<div class="tile" onclick="navigate('services')"><div class="emoji">💍</div><b>Wedding & Mandap</b><small>Dream wedding décor</small></div>
-<div class="tile" onclick="navigate('services')"><div class="emoji">🎂</div><b>Birthday Parties</b><small>Fun themed setups</small></div>
-<div class="tile" onclick="navigate('services')"><div class="emoji">🍼</div><b>Baby Shower</b><small>Sweet welcome moments</small></div>
-<div class="tile" onclick="navigate('services')"><div class="emoji">🌸</div><b>Anniversary</b><small>Romantic celebrations</small></div>
-<div class="tile" onclick="navigate('services')"><div class="emoji">🚘</div><b>Car Decoration</b><small>Special occasion styling</small></div>
-<div class="tile" onclick="navigate('services')"><div class="emoji">🎤</div><b>Sound & Catering</b><small>Event essentials</small></div>
+
+<section class="hero" id="home">
+<div class="wrap">
+<p id="heroTag">Weddings • Birthdays • Celebrations</p>
+<h1 id="heroTitle">Make Your Moments Magical ✨</h1>
+<p id="heroText">Beautiful decorations, memorable celebrations, and planning made easy.</p>
+<div class="hero-actions">
+<button onclick="go('services')">Explore Services</button>
+<button class="gold" onclick="go('booking')">Book Your Event</button>
 </div>
-<div class="promo"><strong>Planning something special?</strong><p>Tell us your date and idea. We'll help make it happen.</p><button class="btn" onclick="navigate('book')">Request a quote</button></div>
-<div class="home-feature"><div class="feature-icon">📸</div><div><strong>Get inspired by our gallery</strong><p>Explore celebration ideas and find the look you love.</p><button class="btn" style="margin-top:10px" onclick="navigate('gallery')">View gallery →</button></div></div>
+</div>
 </section>
-<section id="services" class="screen"><div class="heading"><h2>Services & packages</h2><span>Made with love ✦</span></div>
-<div class="package"><div class="service-icon">💍</div><h3>Wedding Planning & Mandap</h3><p>Make your big day unforgettable with elegant mandap, stage, entrance, floral styling, lighting and event coordination.</p><div class="service-tags"><span>Mandap & Stage</span><span>Floral Décor</span><span>Lighting</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Wedding')">Book Now →</button><button class="btn btn-outline" onclick="navigate('gallery')">See Gallery</button></div></div>
-<div class="package"><div class="service-icon">🎂</div><h3>Birthday & Theme Parties</h3><p>Celebrate in your style with balloon décor, themed backdrops, cake tables and personalized party setups.</p><div class="service-tags"><span>Balloon Décor</span><span>Theme Backdrop</span><span>Cake Table</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Birthday')">Book Now →</button><button class="btn btn-outline" onclick="navigate('gallery')">See Gallery</button></div></div>
-<div class="package"><div class="service-icon">🍼</div><h3>Baby Shower & Baby Welcome</h3><p>Soft dreamy decoration, baby name boards, balloon arrangements and beautiful photo moments.</p><div class="service-tags"><span>Baby Shower</span><span>Welcome Baby</span><span>Name Board</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Baby Shower')">Book Now →</button></div></div>
-<div class="package"><div class="service-icon">🌸</div><h3>Anniversary, Kitty & Family Celebrations</h3><p>Warm, stylish setups for anniversaries, kitty parties, family occasions and intimate celebrations.</p><div class="service-tags"><span>Anniversary</span><span>Kitty Party</span><span>Custom Setup</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Anniversary')">Book Now →</button></div></div>
-<div class="package"><div class="service-icon">🎭</div><h3>Corporate & Special Events</h3><p>Professional event décor and coordination for corporate gatherings, launches, theme events and more.</p><div class="service-tags"><span>Corporate</span><span>Theme Events</span><span>Coordination</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Corporate Event')">Book Now →</button></div></div>
-<div class="package"><div class="service-icon">🚘</div><h3>Car Decoration</h3><p>Beautiful car decoration for weddings, welcomes and special occasions with customized styling.</p><div class="service-tags"><span>Wedding Car</span><span>Custom Décor</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Car Decoration')">Book Now →</button></div></div>
-<div class="package"><div class="service-icon">🎤</div><h3>Event Add-on Services</h3><p>Arrange catering, sound system, lights, anchor, photographer, mehndi and makeup artist for your event.</p><div class="service-tags"><span>Catering</span><span>Sound & Lights</span><span>Anchor & Photo</span><span>Mehndi & Makeup</span></div><div class="service-actions"><button class="btn" onclick="bookNow('Other')">Book Now →</button></div></div>
-<p class="promo">Every celebration is unique. Share your event date, venue and ideas—we'll suggest a setup and prepare a custom quotation.</p><button class="btn" onclick="navigate('book')">Request a quotation →</button></section>
-<section id="gallery" class="screen"><div class="heading"><h2>Magic Events Gallery</h2><span>Albums</span></div><p style="color:var(--muted)">Choose an album to explore photos and videos from our celebrations.</p>
-<div class="album-grid">
-<div class="album-card" onclick="openAlbum('birthday')"><img src="gallery1.jpg" alt="Birthday album cover"><div class="album-name">🎂 Birthday</div><small>Photos & videos</small></div>
-<div class="album-card" onclick="openAlbum('wedding')"><img src="gallery2.jpg" alt="Wedding album cover"><div class="album-name">💍 Wedding & Mandap</div><small>Photos & videos</small></div>
-<div class="album-card" onclick="openAlbum('baby')"><img src="gallery3.jpg" alt="Baby celebrations album cover"><div class="album-name">👶 Baby Shower</div><small>Photos & videos</small></div>
-<div class="album-card" onclick="openAlbum('car')"><img src="gallery4.jpg" alt="Car decoration album cover"><div class="album-name">🚘 Car Decoration</div><small>Photos & videos</small></div>
-<div class="album-card" onclick="openAlbum('theme')"><img src="gallery5.jpg" alt="Theme party album cover"><div class="album-name">🎉 Theme Parties</div><small>Photos & videos</small></div>
-<div class="album-card" onclick="openAlbum('other')"><img src="gallery6.jpg" alt="Other events album cover"><div class="album-name">✨ Other Events</div><small>Photos & videos</small></div>
-</div><div id="album-view" class="album-view" style="display:none"><button class="btn btn-outline" onclick="closeAlbum()">← Back to albums</button><h3 id="album-title"></h3><div id="album-media" class="album-media"></div><button class="btn" style="margin-top:15px" onclick="bookAlbumStyle()">Book This Style →</button></div></section>
-<section id="book" class="screen"><div class="heading"><h2>Book / Request a quote</h2></div><p style="color:var(--muted)">Share your celebration details and we'll contact you.</p><form id="bookingForm">
-<label>Full name *</label><input id="name" required placeholder="Your name"><label>Phone number *</label><input id="phone" required inputmode="tel" placeholder="Mobile number"><label>Choose event *</label><select id="type" required><option value="">Select event</option><option>Wedding</option><option>Birthday</option><option>Baby Shower</option><option>Baby Welcome</option><option>Anniversary</option><option>Kitty Party</option><option>Theme Party</option><option>Corporate Event</option><option>Car Decoration</option><option>Catering</option><option>Sound & Lights</option><option>Anchor / Photographer</option><option>Mehndi & Makeup</option><option>Other</option></select><label>Event date</label><input id="date" type="date"><label>Event location / venue</label><input id="venue" placeholder="Venue or area"><label>Guest count (approx.)</label><input id="guests" type="number" min="1" placeholder="Number of guests"><label>Budget (optional)</label><input id="budget" placeholder="Your approximate budget"><label>Describe your requirements</label><textarea id="details" placeholder="Theme, colors, services you need…"></textarea><button class="btn" type="submit">Send enquiry via WhatsApp</button></form></section>
-<section id="contact" class="screen"><div class="heading"><h2>Contact & connect</h2></div><div class="contact-card"><h3 style="color:var(--wine)">Magic Events & Decorators</h3><p>Kale Brothers</p><p>Wedding planner · Event decoration · Catering · Sound & lights</p></div><a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:9762627656">☎ Call 9762627656</a><a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:7040453659">☎ Call 7040453659</a><a class="btn" style="display:block;text-align:center;margin:9px 0" href="tel:8669262653">☎ Call 8669262653</a><a class="btn" style="display:block;text-align:center;margin:9px 0" href="https://wa.me/919762627656">WhatsApp us</a></section>
-<div class="footnote">Magic Events & Decorators · Making celebrations memorable</div></main>
-<div class="bottom"><div class="nav"><button class="active" onclick="navigate('home',this)"><span>⌂</span>Home</button><button onclick="navigate('services',this)"><span>✦</span>Services</button><button onclick="navigate('gallery',this)"><span>▧</span>Gallery</button><button onclick="navigate('book',this)"><span>＋</span>Book</button><button onclick="navigate('contact',this)"><span>☎</span>Contact</button></div></div>
+
+<section id="services">
+<div class="wrap">
+<h2 id="servicesTitle">Our Services</h2>
+<div class="cards" id="servicesCards"></div>
+</div>
+</section>
+
+<section id="gallery">
+<div class="wrap">
+<h2 id="galleryTitle">Gallery</h2>
+<div id="albumGrid" class="album-grid"></div>
+<div id="albumView" class="hidden">
+<button class="secondary" onclick="closeAlbum()">← Albums</button>
+<h3 id="albumHeading"></h3>
+<div id="albumPhotos" class="photo-grid"></div>
+</div>
+</div>
+</section>
+
+<section id="packages">
+<div class="wrap">
+<h2 id="packagesTitle">Packages & Price Estimates</h2>
+<p class="note">Starting estimates only. Final quotation depends on venue, date, design and materials.</p>
+<div class="cards">
+
+<div class="card package">
+<h3>Basic Celebration</h3>
+<p>Simple backdrop & balloon décor</p>
+<p class="price">₹4,999*</p>
+<button onclick="choosePackage('Basic Celebration',4999)">Select Package</button>
+</div>
+
+<div class="card package">
+<h3>Premium Celebration</h3>
+<p>Theme décor, backdrop & entry setup</p>
+<p class="price">₹9,999*</p>
+<button onclick="choosePackage('Premium Celebration',9999)">Select Package</button>
+</div>
+
+<div class="card package">
+<h3>Luxury Event</h3>
+<p>Custom premium decoration setup</p>
+<p class="price">₹19,999*</p>
+<button onclick="choosePackage('Luxury Event',19999)">Select Package</button>
+</div>
+
+</div>
+</div>
+</section>
+
+<section id="offers">
+<div class="wrap">
+<h2>🎁 Special Offers</h2>
+<div class="panel">
+<p>Ask us about current seasonal offers and custom combo packages.</p>
+<button onclick="go('booking')">Enquire About Offers</button>
+</div>
+</div>
+</section>
+
+<section id="booking">
+<div class="wrap">
+<h2 id="bookingTitle">Event Booking / Quotation</h2>
+<div class="panel">
+
+<form id="bookingForm">
+
+<label>Name
+<input name="name" required placeholder="Your full name">
+</label>
+
+<label>Mobile Number
+<input name="phone" required inputmode="tel" placeholder="Mobile number">
+</label>
+
+<label>Event Type
+<select name="event" required>
+<option value="">Select event</option>
+<option>Wedding</option>
+<option>Birthday Party</option>
+<option>Kitty Party</option>
+<option>Baby Shower</option>
+<option>Baby Welcome</option>
+<option>Name Ceremony</option>
+<option>Theme Party</option>
+<option>Car Decoration</option>
+<option>Anniversary</option>
+<option>Corporate Event</option>
+<option>Other</option>
+</select>
+</label>
+
+<label>Event Date
+<input type="date" name="date" required id="eventDate">
+</label>
+
+<label>Event Time
+<input type="time" name="time">
+</label>
+
+<label>Event Address
+<input name="venue" required placeholder="Full event address">
+</label>
+
+<h3>📍 Event Location</h3>
+<p>Customer can use their current location or enter the venue address. Use Google Maps to find the exact pin and paste coordinates below.</p>
+
+<button type="button" class="secondary" onclick="getMyLocation()">📍 Use My Location</button>
+
+<iframe id="pickerMap" class="map-preview"
+src="https://maps.google.com/maps?q=Pune&output=embed"
+loading="lazy"></iframe>
+
+<label>Map Coordinates (optional)
+<input name="coords" id="coords" placeholder="Latitude, Longitude">
+</label>
+
+<label>Decoration Package
+<select name="package" id="packageSelect">
+<option value="">Custom / not selected</option>
+<option value="Basic Celebration|4999">Basic Celebration – ₹4,999</option>
+<option value="Premium Celebration|9999">Premium Celebration – ₹9,999</option>
+<option value="Luxury Event|19999">Luxury Event – ₹19,999</option>
+</select>
+</label>
+
+<label>Estimated Budget (₹)
+<input name="budget" type="number" min="0" placeholder="Your budget">
+</label>
+
+<label>Decoration / Requirements
+<textarea name="details" rows="3" placeholder="Describe your decoration ideas"></textarea>
+</label>
+
+<div id="selectedDesign" class="hidden"></div>
+
+<hr>
+
+<h3>💳 Advance Payment</h3>
+<p>Pay advance using QR / PhonePe / UPI.</p>
+
+<div class="panel">
+<p><strong>UPI QR Code</strong></p>
+
+<div id="qrPlaceholder" class="status">
+QR placeholder — owner must add real QR image
+</div>
+
+<p><strong>PhonePe / UPI Payment Details</strong></p>
+<p id="phonepeDisplay">Payment details not configured</p>
+
+<button type="button" class="secondary" onclick="copyPayment()">
+Copy Payment Details
+</button>
+</div>
+
+<label>Advance Amount Paid (₹)
+<input name="advance" type="number" min="0" placeholder="Enter amount paid">
+</label>
+
+<label>UPI Transaction ID / UTR
+<input name="utr" placeholder="Payment reference number">
+</label>
+
+<label>Upload Payment Screenshot (optional)
+<input type="file" name="paymentProof" accept="image/*">
+</label>
+
+<button type="submit">Submit Booking & Payment Enquiry on WhatsApp</button>
+
+<small class="note">
+Payment remains pending verification until checked by Magic Events.
+</small>
+</form>
+
+<div id="quote" class="hidden panel" style="margin-top:14px"></div>
+</div>
+</div>
+</section>
+
+<section id="bookingStatus">
+<div class="wrap">
+<h2>Booking Confirmation & Event Map</h2>
+<div class="panel">
+
+<p>
+Booking confirmation and payment verification currently need manual confirmation.
+A live customer status system needs a connected database.
+</p>
+
+<label>Booking Reference
+<input id="statusRef" placeholder="Enter your booking reference">
+</label>
+
+<button onclick="lookupStatus()">Check Status</button>
+
+<div id="statusResult"></div>
+
+</div>
+</div>
+</section>
+
+<section id="reviews">
+<div class="wrap">
+<h2>⭐ Customer Reviews</h2>
+<div class="panel">
+<p>We’d love to hear about your experience!</p>
+
+<form onsubmit="sendReview(event)">
+<label>Your Name
+<input id="reviewName" required>
+</label>
+
+<label>Your Review
+<textarea id="reviewText" rows="3" required placeholder="Write your feedback"></textarea>
+</label>
+
+<button type="submit">Share Review</button>
+</form>
+</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="wrap">
+<h2>Contact Us</h2>
+<div class="cards">
+
+<div class="card">
+<strong>📞 Call</strong>
+<p>9762627656</p>
+<a class="btn" href="tel:9762627656">Call Now</a>
+</div>
+
+<div class="card">
+<strong>💬 WhatsApp</strong>
+<p>Booking and enquiry</p>
+<a class="btn" href="https://wa.me/919762627656" target="_blank">WhatsApp</a>
+</div>
+
+<div class="card">
+<strong>📍 Location</strong>
+<p>Find Magic Events & Decorators</p>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Magic+Events+and+Decorators" target="_blank">Open Maps</a>
+</div>
+
+</div>
+<p>Other contact numbers: 7040453659 • 8669262653</p>
+</div>
+</section>
+
+</main>
+
+<footer>
+<strong>Magic Events & Decorators</strong>
+<p>Let's make your celebration unforgettable ✨</p>
+</footer>
+
+<nav class="bottom-nav">
+<button class="active" onclick="go('home',this)">🏠 Home</button>
+<button onclick="go('services',this)">🎉 Services</button>
+<button onclick="go('gallery',this)">🖼️ Gallery</button>
+<button onclick="go('booking',this)">📅 Book</button>
+<button onclick="go('contact',this)">☎ Contact</button>
+</nav>
+
+<div id="photoModal" class="modal hidden" onclick="if(event.target.id==='photoModal')closePhoto()">
+<div class="modal-box">
+<button class="secondary" onclick="closePhoto()">Close ✕</button>
+<img id="modalImage" src="" alt="Selected decoration">
+<div class="hero-actions">
+<button onclick="bookSelectedPhoto()">Book This Design</button>
+<button class="secondary" onclick="shareSelectedPhoto()">Share Photo</button>
+</div>
+</div>
+</div>
 <script>
+// ===== OWNER PAYMENT SETTINGS =====
+// खाली तुमचे खरे payment details नंतर टाका.
+const phone = '919762627656';
+const PAYMENT_UPI_ID = 'YOUR-UPI-ID-HERE';
+const PAYMENT_PHONEPE_NUMBER = 'ADD-PHONEPE-NUMBER';
+const PAYMENT_QR_IMAGE = 'payment-qr.png';
 
-const albumData={birthday:{title:'🎂 Birthday Album',images:['gallery1.jpg','gallery2.jpg','gallery3.jpg'],videos:[],book:'Birthday'},wedding:{title:'💍 Wedding & Mandap Album',images:['gallery4.jpg','gallery5.jpg','gallery6.jpg','gallery7.jpg'],videos:[],book:'Wedding'},baby:{title:'👶 Baby Shower Album',images:['gallery8.jpg','gallery9.jpg'],videos:[],book:'Baby Shower'},car:{title:'🚘 Car Decoration Album',images:['gallery10.jpg','gallery1.jpg'],videos:[],book:'Car Decoration'},theme:{title:'🎉 Theme Party Album',images:['gallery2.jpg','gallery3.jpg'],videos:[],book:'Theme Party'},other:{title:'✨ Other Events Album',images:['gallery4.jpg','gallery5.jpg'],videos:[],book:'Other'}};
-let currentAlbum='';
-let selectedDesign='';
-let selectedPhoto='';
-function openAlbum(id){
-  currentAlbum=id;
-  selectedPhoto='';
-  const data=albumData[id];
+// ===== SERVICES =====
+const services = [
+['Wedding Planner','Wedding','💍'],
+['Birthday Party','Birthday','🎂'],
+['Kitty Party','Kitty','🎀'],
+['Baby Shower','Baby','🍼'],
+['Baby Welcome','Baby','👶'],
+['Name Ceremony','Name','🪷'],
+['Theme Party','Theme','🎭'],
+['Car Decoration','Car','🚘'],
+['Anniversary','Anniversary','❤️'],
+['Catering Services','Catering','🍽️'],
+['Corporate Events','Corporate','🏢'],
+['Anchor & Photographer','Other','🎤'],
+['Sound & Lights','Other','🔊'],
+['Mehndi & Makeup Artist','Other','💄']
+];
 
-  document.getElementById('album-title').textContent=data.title;
+// ===== GALLERY ALBUMS =====
+const albumData = {
+birthday:{title:'Birthday Album',images:['gallery1.jpg','gallery2.jpg','gallery3.jpg']},
+wedding:{title:'Wedding Album',images:['gallery4.jpg','gallery5.jpg','gallery6.jpg','gallery7.jpg']},
+baby:{title:'Baby Celebration',images:['gallery8.jpg','gallery9.jpg']},
+car:{title:'Car Decoration',images:['gallery10.jpg','gallery1.jpg']},
+theme:{title:'Theme Party',images:['gallery2.jpg','gallery3.jpg']},
+other:{title:'Other Events',images:['gallery4.jpg','gallery5.jpg']}
+};
 
-  const box=document.getElementById('album-media');
+let selectedPhoto = '';
+let selectedAlbum = '';
+let isMarathi = false;
 
-  box.innerHTML=data.images.map(src=>`
-    <div class="photo-item">
-      <img src="${src}" alt="Event photo"
-      onclick="selectPhoto('${src}')">
-      <button class="btn" onclick="selectPhoto('${src}')">
-        Book this design →
-      </button>
-    </div>
-  `).join('')+
-  (data.videos||[]).map(src=>`
-    <video controls playsinline preload="metadata"
-    src="${src}" style="width:100%;border-radius:13px">
-    </video>
-  `).join('');
+const albumCovers = [
+['birthday','🎂 Birthday'],
+['wedding','💍 Wedding'],
+['baby','🍼 Baby Events'],
+['car','🚘 Car Decoration'],
+['theme','🎭 Theme Party'],
+['other','✨ Other Events']
+];
 
-  document.querySelector('.album-grid').style.display='none';
-  document.getElementById('album-view').style.display='block';
-  document.getElementById('album-view')
-    .scrollIntoView({behavior:'smooth'});
-}
+// ===== NAVIGATION =====
+function go(id,btn) {
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
 
- function selectPhoto(src) {
-  selectedPhoto = src;
-
-  document.getElementById('photoPreviewModal')?.remove();
-
-  const modal = document.createElement('div');
-  modal.id = 'photoPreviewModal';
-
-  modal.style.cssText = `
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.92);
-    z-index:99999;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-  `;
-
-  modal.innerHTML = `
-    <button id="closePhotoPreview"
-      style="position:absolute;top:20px;right:20px;
-      font-size:30px;color:white;background:none;border:none;">
-      ✕
-    </button>
-
-    <img src="${src}"
-      style="max-width:100%;max-height:75vh;
-      object-fit:contain;border-radius:12px;">
-
-    <button id="photoBookNow"
-      style="margin-top:20px;padding:15px 30px;
-      background:#c2185b;color:white;border:none;
-      border-radius:30px;font-size:18px;font-weight:bold;">
-      📅 Book Now
-    </button>
-  `;
-
-  document.body.appendChild(modal);
-
-  document.getElementById('closePhotoPreview').onclick = () => {
-    modal.remove();
-  };
-
-  document.getElementById('photoBookNow').onclick = () => {
-    modal.remove();
-    bookNow(albumData[currentAlbum].book);
-  };
-}
-   
-async function sharePhoto(src){
-  try{
-    const response=await fetch(src);
-    const blob=await response.blob();
-    const file=new File([blob],'Magic-Events-Design.jpg',{type:blob.type||'image/jpeg'});
-
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({
-        files:[file],
-        title:'Magic Events Design',
-        text:'Selected decoration design from Magic Events & Decorators'
-      });
-    }else{
-      alert('Photo sharing is not supported on this device.');
-    }
-  }catch(error){
-    alert('Photo share failed. Please try again.');
-  }
-} 
-  function closeAlbum(){
-  document.getElementById('album-view').style.display='none';
-  document.querySelector('.album-grid').style.display='grid';
-  currentAlbum='';
-  document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
- }
-function bookAlbumStyle(){
-  if(currentAlbum){
-    bookNow(albumData[currentAlbum].book);
-  }
-}
-  function navigate(id,btn){
-  document.querySelectorAll('.screen').forEach(x=>{
-    x.classList.remove('active');
-  });
-
-  const target = document.getElementById(id);
-  if(target){
-    target.classList.add('active');
-  }
-
-  if(btn){
-    document.querySelectorAll('.nav button').forEach(x=>{
-      x.classList.remove('active');
-    });
+  if(btn) {
     btn.classList.add('active');
+  } else {
+    const map={home:0,services:1,gallery:2,booking:3,contact:4};
+    document.querySelectorAll('.bottom-nav button')[map[id]||0]?.classList.add('active');
   }
 }
 
-function bookNow(eventType){
-  const selector = document.getElementById('type');
-
-  if(eventType && selector){
-    selector.value = eventType;
-  }
-
-  navigate('book');
+// ===== RENDER SERVICES =====
+function renderServices() {
+  document.getElementById('servicesCards').innerHTML =
+    services.map(s=>`
+      <div class="card service">
+        <strong>${s[2]} ${s[0]}</strong>
+        <button class="secondary" onclick="openAlbumByService('${s[1]}')">
+          View Photos / Book
+        </button>
+      </div>
+    `).join('');
 }
 
-document.getElementById('bookingForm').addEventListener('submit', async e=>{
+// ===== GALLERY =====
+function renderAlbums() {
+  document.getElementById('albumGrid').innerHTML =
+    albumCovers.map(([id,label],i)=>`
+      <div class="album" onclick="openAlbum('${id}')">
+        <img src="gallery${i+1}.jpg" alt="${label}">
+        <div>${label}</div>
+      </div>
+    `).join('');
+}
+
+function openAlbum(id) {
+  selectedAlbum=id;
+  const a=albumData[id];
+  if(!a)return;
+
+  document.getElementById('albumGrid').classList.add('hidden');
+  document.getElementById('albumView').classList.remove('hidden');
+  document.getElementById('albumHeading').textContent=a.title;
+
+  document.getElementById('albumPhotos').innerHTML =
+    a.images.map(src=>`
+      <div class="photo-item">
+        <img src="${src}" alt="Decoration photo" onclick="showPhoto('${src}')">
+        <button onclick="showPhoto('${src}')">Preview / Book</button>
+      </div>
+    `).join('');
+}
+
+function closeAlbum() {
+  document.getElementById('albumGrid').classList.remove('hidden');
+  document.getElementById('albumView').classList.add('hidden');
+}
+
+function openAlbumByService(type) {
+  const key =
+    type==='Birthday'?'birthday':
+    type==='Wedding'?'wedding':
+    type==='Baby'?'baby':
+    type==='Car'?'car':
+    type==='Theme'?'theme':'other';
+
+  go('gallery');
+  openAlbum(key);
+}
+
+// ===== PHOTO PREVIEW & BOOK =====
+function showPhoto(src) {
+  selectedPhoto=src;
+  document.getElementById('modalImage').src=src;
+  document.getElementById('photoModal').classList.remove('hidden');
+}
+
+function closePhoto() {
+  document.getElementById('photoModal').classList.add('hidden');
+}
+
+function bookSelectedPhoto() {
+  closePhoto();
+  const box=document.getElementById('selectedDesign');
+  box.innerHTML=`<p><strong>Selected Design:</strong> ${selectedPhoto}</p>`;
+  box.classList.remove('hidden');
+  go('booking');
+}
+
+// ===== PACKAGES =====
+function choosePackage(name,price) {
+  document.getElementById('packageSelect').value=name+'|'+price;
+  document.querySelector('[name=budget]').value=price;
+  go('booking');
+  calculateQuote();
+}
+
+function calculateQuote() {
+  const sel=document.getElementById('packageSelect').value;
+  if(!sel)return;
+
+  const [name,price]=sel.split('|');
+  const q=document.getElementById('quote');
+
+  q.innerHTML=`
+    <strong>Estimate</strong>
+    <p>Package: ${name}</p>
+    <p class="price">Estimated total: ₹${Number(price).toLocaleString('en-IN')}</p>
+    <small>Final amount will be confirmed after discussion.</small>
+  `;
+  q.classList.remove('hidden');
+}
+
+document.getElementById('packageSelect')
+.addEventListener('change',calculateQuote);
+
+// ===== PAYMENT DISPLAY =====
+function setupPaymentDisplay() {
+  document.getElementById('phonepeDisplay').textContent =
+    `UPI ID: ${PAYMENT_UPI_ID} | PhonePe Number: ${PAYMENT_PHONEPE_NUMBER}`;
+
+  const holder=document.getElementById('qrPlaceholder');
+  const img=new Image();
+
+  img.src=PAYMENT_QR_IMAGE;
+
+  img.onload=()=>{
+    holder.innerHTML=`
+      <img src="${PAYMENT_QR_IMAGE}"
+      alt="UPI QR Code"
+      style="max-width:220px;width:100%;display:block;margin:auto">
+      <p>Scan this QR to pay</p>
+    `;
+  };
+}
+
+function copyPayment() {
+  const text=`UPI ID: ${PAYMENT_UPI_ID} | PhonePe: ${PAYMENT_PHONEPE_NUMBER}`;
+
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+    .then(()=>alert('Payment details copied!'))
+    .catch(()=>alert(text));
+  } else {
+    alert(text);
+  }
+}
+
+// ===== CUSTOMER LOCATION =====
+function getMyLocation() {
+  if(!navigator.geolocation) {
+    alert('Location is not supported in this browser.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude;
+    const lng=pos.coords.longitude;
+
+    document.getElementById('coords').value=`${lat}, ${lng}`;
+
+    document.getElementById('pickerMap').src=
+      `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
+
+    const address=document.querySelector('[name=venue]');
+    if(!address.value) address.value=`${lat}, ${lng}`;
+
+  },()=>{
+    alert('Location permission denied. Address manually enter करा.');
+  },{enableHighAccuracy:true,timeout:12000});
+}
+
+// ===== BOOKING WHATSAPP MESSAGE =====
+function bookingText(data) {
+  return `✨ MAGIC EVENTS & DECORATORS BOOKING
+
+Name: ${data.get('name')}
+Phone: ${data.get('phone')}
+Event: ${data.get('event')}
+Date: ${data.get('date')}
+Time: ${data.get('time')||'Not specified'}
+Venue: ${data.get('venue')||'Not specified'}
+Map Coordinates: ${data.get('coords')||'Not provided'}
+Package: ${data.get('package')||'Custom'}
+Budget: ${data.get('budget')||'Not specified'}
+Advance Paid: ₹${data.get('advance')||'0'}
+UPI UTR: ${data.get('utr')||'Not provided'}
+Requirements: ${data.get('details')||'None'}
+Selected Design: ${selectedPhoto||'No photo selected'}
+
+PAYMENT STATUS: PENDING VERIFICATION`;
+}
+
+document.getElementById('bookingForm')
+.addEventListener('submit',async e=>{
   e.preventDefault();
 
-  const data={
-    name:document.getElementById('name').value,
-    phone:document.getElementById('phone').value,
-    type:document.getElementById('type').value,
-    date:document.getElementById('date').value,
-    venue:document.getElementById('venue').value,
-    guests:document.getElementById('guests').value,
-    budget:document.getElementById('budget').value,
-    details:document.getElementById('details').value
+  const data=new FormData(e.target);
+  const text=bookingText(data);
+  const ref='MED'+Date.now().toString().slice(-8);
+  const proof=data.get('paymentProof');
+
+  try {
+    let files=[];
+
+    if(selectedPhoto) {
+      const r=await fetch(selectedPhoto);
+      if(r.ok) {
+        const blob=await r.blob();
+        files.push(new File([blob],
+          selectedPhoto.split('/').pop()||'design.jpg',
+          {type:blob.type||'image/jpeg'}));
+      }
+    }
+
+    if(proof && proof.size>0) files.push(proof);
+
+    if(files.length && navigator.share &&
+       navigator.canShare && navigator.canShare({files})) {
+      await navigator.share({
+        files,
+        title:'Magic Events Booking',
+        text:text+'\nBooking Reference: '+ref
+      });
+      return;
+    }
+  } catch(err) {
+    // Fallback to WhatsApp text message below.
+  }
+
+  window.open(
+    'https://wa.me/'+phone+'?text='+encodeURIComponent(text+'\nBooking Reference: '+ref),
+    '_blank'
+  );
+
+  alert('Booking enquiry WhatsApp मध्ये उघडण्याचा प्रयत्न केला. Payment verify करून booking confirm केली जाईल. Reference: '+ref);
+});
+
+// ===== PHOTO SHARE =====
+async function shareSelectedPhoto() {
+  if(!selectedPhoto)return;
+
+  try {
+    const r=await fetch(selectedPhoto);
+    if(!r.ok)throw new Error();
+
+    const b=await r.blob();
+    const f=new File([b],
+      selectedPhoto.split('/').pop()||'photo.jpg',
+      {type:b.type||'image/jpeg'});
+
+    if(navigator.share && navigator.canShare({files:[f]})) {
+      await navigator.share({files:[f],title:'Decoration Photo'});
+    } else {
+      alert('या browser मध्ये photo sharing उपलब्ध नाही.');
+    }
+  } catch {
+    alert('Photo file उपलब्ध नाही. Gallery file तपासा.');
+  }
+}
+
+// ===== BOOKING STATUS DEMO =====
+function lookupStatus() {
+  const ref=document.getElementById('statusRef').value.trim();
+  if(!ref) {
+    alert('Booking reference टाका.');
+    return;
+  }
+
+  document.getElementById('statusResult').innerHTML=`
+    <p class="status">
+      Reference: ${ref.replace(/[<>]/g,'')}<br>
+      Status lookup साठी live database/backend जोडणे आवश्यक आहे.
+    </p>
+    <p class="note">Confirmed bookings नंतर saved event location map दाखवू शकतो.</p>
+  `;
+}
+
+// ===== CUSTOMER REVIEW SHARE =====
+function sendReview(e) {
+  e.preventDefault();
+
+  const text=`Customer Review for Magic Events & Decorators
+Name: ${document.getElementById('reviewName').value}
+Review: ${document.getElementById('reviewText').value}`;
+
+  window.open(
+    'https://wa.me/'+phone+'?text='+encodeURIComponent(text),
+    '_blank'
+  );
+}
+
+// ===== MARATHI / ENGLISH SWITCH =====
+function toggleLanguage() {
+  isMarathi=!isMarathi;
+  document.getElementById('langBtn').textContent=isMarathi?'English':'मराठी';
+
+  const t=isMarathi?{
+    heroTitle:'तुमचे क्षण खास बनवा ✨',
+    heroText:'सुंदर सजावट, अविस्मरणीय कार्यक्रम आणि सोपे नियोजन.',
+    heroTag:'लग्न • वाढदिवस • समारंभ',
+    servicesTitle:'आमच्या सेवा',
+    galleryTitle:'फोटो गॅलरी',
+    packagesTitle:'पॅकेज व अंदाजित किंमत',
+    bookingTitle:'कार्यक्रम बुकिंग / कोटेशन'
+  }:{
+    heroTitle:'Make Your Moments Magical ✨',
+    heroText:'Beautiful decorations, memorable celebrations, and planning made easy.',
+    heroTag:'Weddings • Birthdays • Celebrations',
+    servicesTitle:'Our Services',
+    galleryTitle:'Gallery',
+    packagesTitle:'Packages & Price Estimates',
+    bookingTitle:'Event Booking / Quotation'
   };
 
-  const message=`Magic Events Booking Enquiry
-Name: ${data.name}
-Customer Phone: ${data.phone}
-Event: ${data.type}
-Date: ${data.date}
-Venue: ${data.venue}
-Guests: ${data.guests}
-Budget: ${data.budget}
-Requirements: ${data.details}`;
-
-  try{
-    if(selectedPhoto){
-      const response=await fetch(selectedPhoto);
-      const blob=await response.blob();
-      const file=new File([blob],'Decoration-Photo.jpg',{
-        type:blob.type || 'image/jpeg'
-      });
-
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-  await navigator.share({
-    files:[file],
-    title:'Magic Events Booking',
-    text:message
+  Object.entries(t).forEach(([id,v])=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=v;
   });
-      }
-      }else{
-        window.location.href=
-          'https://wa.me/919762627656?text='+
-          encodeURIComponent(message+'\nPhoto: '+new URL(selectedPhoto,window.location.href).href);
-      }
-    }else{
-      window.location.href=
-        'https://wa.me/919762627656?text='+encodeURIComponent(message);
-    }
-  }catch(error){
-    if(error.name!=='AbortError'){
-      alert('Please try booking again.');
-    }
-  }
-});
-  marathi=false;
-function toggleLang(){marathi=!marathi;document.getElementById('langBtn').textContent=marathi?'English':'मराठी';const labels=marathi?['मुख्यपृष्ठ','सेवा','गॅलरी','बुकिंग','संपर्क']:['Home','Services','Gallery','Book','Contact'];document.querySelectorAll('.nav button').forEach((b,i)=>{const icons=b.querySelector('span').textContent;b.innerHTML='<span>'+icons+'</span>'+labels[i]});const heroTitle=document.querySelector('.hero h1');heroTitle.innerHTML=marathi?'तुमचा आनंदाचा दिवस<br>अविस्मरणीय बनवा.':'Celebrate beautifully.<br>Remember forever.';document.querySelector('.hero .eyebrow').textContent=marathi?'प्रत्येक क्षण खास बनवा':'MAKE EVERY MOMENT MAGIC';document.querySelector('.hero p').textContent=marathi?'तुमच्या खास क्षणांसाठी सुंदर सजावट आणि कार्यक्रम नियोजन.':'Thoughtful event planning & dreamy decorations for your special moments.';document.querySelector('.hero .btn').textContent=marathi?'बुकिंग करा →':'Book your celebration →';document.querySelector('#home .heading h2').textContent=marathi?'आमच्या सेवा':'Explore our services';document.querySelector('#services .heading h2').textContent=marathi?'सेवा आणि पॅकेजेस':'Services & packages';document.querySelector('#gallery .heading h2').textContent=marathi?'फोटो गॅलरी':'Inspiration gallery';document.querySelector('#book .heading h2').textContent=marathi?'बुकिंग / दर विचारणा':'Book / Request a quote';document.querySelector('#contact .heading h2').textContent=marathi?'संपर्क करा':'Contact & connect';document.querySelector('#bookingForm button').textContent=marathi?'WhatsApp वर चौकशी पाठवा':'Send enquiry via WhatsApp';}
+}
+
+// ===== START APP =====
+renderServices();
+renderAlbums();
+setupPaymentDisplay();
+
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>
+</body>
+</html>
