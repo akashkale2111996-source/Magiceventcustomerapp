@@ -30,8 +30,19 @@ main{max-width:680px;margin:auto;padding:15px 16px 100px}
 .album-name{color:var(--wine);font-weight:800;margin:9px 2px 3px;font-size:15px}.album-card small{color:var(--muted);margin-left:2px}
 .album-view{background:#fff;border:1px solid #f0dfe5;border-radius:18px;padding:14px;margin-top:16px}
 .album-view h3{color:var(--wine);margin:14px 0}.album-media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.album-media img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:13px;cursor:pointer}
-.album-note{background:#f5e4e8;color:var(--wine);border-radius:12px;padding:12px;grid-column:1/-1;font-size:13px}
+.album-media img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  transition:transform 0.2s ease;
+}
+.album-media img:active{
+  transform:scale(0.97);
+}
+ .album-note{background:#f5e4e8;color:var(--wine);border-radius:12px;padding:12px;grid-column:1/-1;font-size:13px}
 @media(max-width:380px){.album-name{font-size:13px}}
 form{background:white;border-radius:18px;padding:17px;box-shadow:0 4px 14px #3912200b}
 label{display:block;margin:12px 0 5px;font-size:13px;font-weight:750;color:var(--wine)}input,select,textarea{width:100%;border:1px solid #e9cfd9;background:#fffafb;border-radius:11px;padding:12px;font:inherit;color:var(--ink)}textarea{min-height:85px}form .btn{width:100%;margin-top:17px;background:var(--wine);color:white}
