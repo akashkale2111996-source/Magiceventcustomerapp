@@ -208,12 +208,31 @@ function bookAlbumStyle(){
     bookNow(albumData[currentAlbum].book);
   }
 }
-  function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
- function bookNow(eventType){
+  function navigate(id,btn){
+  document.querySelectorAll('.screen').forEach(x=>{
+    x.classList.remove('active');
+  });
+
+  const target = document.getElementById(id);
+  if(target){
+    target.classList.add('active');
+  }
+
+  if(btn){
+    document.querySelectorAll('.nav button').forEach(x=>{
+      x.classList.remove('active');
+    });
+    btn.classList.add('active');
+  }
+}
+
+function bookNow(eventType){
   const selector = document.getElementById('type');
+
   if(eventType && selector){
     selector.value = eventType;
   }
+
   navigate('book');
 }
 
