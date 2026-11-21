@@ -176,20 +176,15 @@ Guests: ${data.guests}
 Budget: ${data.budget}
 Requirements: ${data.details}`;
 
-  try{
-    if(selectedPhoto){
-      const response=await fetch(selectedPhoto);
-      const blob=await response.blob();
-      const file=new File([blob],'Selected-Design.jpg',{type:blob.type||'image/jpeg'});
 
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({files:[file],text:text,title:'Magic Events Booking'});
-      }else{
-        window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank');
-      }
-    }else{
-      window.open('https://wa.me/919762627656?text='+encodeURIComponent(text),'_blank');
-    }
+     try {
+  const whatsappURL =
+    'https://wa.me/919762627656?text=' +
+    encodeURIComponent(text);
+
+  window.location.href = whatsappURL;
+
+     
   }catch(error){
     alert('Sharing cancelled or failed. Please try again.');
   }
