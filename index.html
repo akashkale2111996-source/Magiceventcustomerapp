@@ -355,10 +355,20 @@ document.querySelectorAll(".bottom-nav button")
 
 // GALLERY BOOKING
 function selectAlbum(name){
-document.querySelector('[name="event"]').value=
-name==="Wedding"?"Wedding":
-name==="Birthday"?"Birthday Party":name;
-go("booking");
+  const eventField = document.querySelector('[name="event"]');
+
+  if(eventField){
+    eventField.value =
+      name === "Wedding" ? "Wedding" :
+      name === "Birthday" ? "Birthday Party" : name;
+  }
+
+  go("booking");
+
+  setTimeout(() => {
+    const form = document.getElementById("bookingForm");
+    if(form) form.scrollIntoView({behavior:"smooth"});
+  }, 300);
 }
 
 // CUSTOMER LOCATION
