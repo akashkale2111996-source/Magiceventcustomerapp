@@ -239,11 +239,12 @@ Requirements: ${data.details}`;
       });
 
       if(navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({
-          files:[file],
-          title:'Magic Events Booking',
-          text:message
-        });
+  await navigator.share({
+    files:[file],
+    title:'Magic Events Booking',
+    text:message
+  });
+      }
       }else{
         window.location.href=
           'https://wa.me/919762627656?text='+
