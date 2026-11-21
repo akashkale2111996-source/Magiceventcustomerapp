@@ -198,8 +198,15 @@ function bookAlbumStyle(){
   }
 }
   function navigate(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{const map={home:0,services:1,gallery:2,book:3,contact:4};document.querySelectorAll('.nav button')[map[id]].classList.add('active')}window.scrollTo({top:0,behavior:'smooth'})}
-function bookNow(eventType){const selector=document.getElementById('type');if(selector){selector.value=eventType; if(!selector.value)selector.value='Other';}navigate('book')}
-document.getElementById('bookingForm').addEventListener('submit',async e=>{
+ function bookNow(eventType){
+  const selector = document.getElementById('type');
+  if(eventType && selector){
+    selector.value = eventType;
+  }
+  navigate('book');
+}
+
+document.getElementById('bookingForm').addEventListener('submit', async e=>{
   e.preventDefault();
 
   const data={
@@ -213,9 +220,9 @@ document.getElementById('bookingForm').addEventListener('submit',async e=>{
     details:document.getElementById('details').value
   };
 
-  const text=`Magic Events customer enquiry
+  const message=`Magic Events Booking Enquiry
 Name: ${data.name}
-Customer phone: ${data.phone}
+Customer Phone: ${data.phone}
 Event: ${data.type}
 Date: ${data.date}
 Venue: ${data.venue}
@@ -223,17 +230,33 @@ Guests: ${data.guests}
 Budget: ${data.budget}
 Requirements: ${data.details}`;
 
+  try{
+    if(selectedPhoto){
+      const response=await fetch(selectedPhoto);
+      const blob=await response.blob();
+      const file=new File([blob],'Decoration-Photo.jpg',{
+        type:blob.type || 'image/jpeg'
+      });
 
-     try {
-  const whatsappURL =
-    'https://wa.me/919762627656?text=' +
-    encodeURIComponent(text);
-
-  window.location.href = whatsappURL;
-
-     
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({
+          files:[file],
+          title:'Magic Events Booking',
+          text:message
+        });
+      }else{
+        window.location.href=
+          'https://wa.me/919762627656?text='+
+          encodeURIComponent(message+'\nPhoto: '+new URL(selectedPhoto,window.location.href).href);
+      }
+    }else{
+      window.location.href=
+        'https://wa.me/919762627656?text='+encodeURIComponent(message);
+    }
   }catch(error){
-    alert('Sharing cancelled or failed. Please try again.');
+    if(error.name!=='AbortError'){
+      alert('Please try booking again.');
+    }
   }
 });
   marathi=false;
