@@ -2,213 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#7d365a">
 <title>Magic Events & Decorators</title>
+
 <style>
-:root {
-  --wine:#7d365a;
-  --rose:#b45d83;
-  --cream:#fff8f5;
-  --ink:#281923;
-  --gold:#d6a84f;
-  --soft:#f4e7ee;
+:root{
+--wine:#7d365a;
+--rose:#b45d82;
+--cream:#fff7f1;
+--ink:#281923;
+--gold:#d6a64b;
+--soft:#f6e8ef
 }
-* { box-sizing:border-box }
-body {
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:var(--cream);
-  color:var(--ink);
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+background:var(--cream);
+color:var(--ink);
+padding-bottom:78px
 }
-header {
-  position:sticky; top:0; z-index:20;
-  background:white; box-shadow:0 3px 15px #0001;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 16px;
+header{
+position:sticky;top:0;z-index:5;
+background:white;
+box-shadow:0 2px 12px #0001;
+display:flex;align-items:center;justify-content:space-between;
+padding:12px 14px
 }
-.brand { font-weight:900; color:var(--wine); font-size:1.05rem }
-.brand small { display:block; font-size:.72rem; color:#72515f }
-button,.btn {
-  border:0; border-radius:12px; padding:11px 15px;
-  background:var(--wine); color:white; font-weight:700;
-  cursor:pointer; text-decoration:none; display:inline-block;
+.brand{font-weight:900;color:var(--wine)}
+.brand small{display:block;font-size:.7rem;color:#765e6a;font-weight:500}
+button,.btn{
+border:0;border-radius:12px;padding:12px 15px;
+background:var(--wine);color:white;font-weight:750;
+cursor:pointer;text-decoration:none;display:inline-block
 }
-button.secondary,.btn.secondary { background:#f0e1e9; color:var(--wine) }
-button.gold { background:var(--gold); color:#30220c }
-section { padding:26px 16px; scroll-margin-top:70px }
-.wrap { max-width:980px; margin:auto }
-.hero {
-  background:linear-gradient(135deg,#7d365a,#b45d83);
-  color:white; padding:36px 18px;
-  border-radius:0 0 28px 28px; text-align:center;
+.secondary{background:var(--soft);color:var(--wine)}
+.gold{background:var(--gold);color:#2b2010}
+main section{padding:22px 15px;scroll-margin-top:68px}
+.wrap{max-width:850px;margin:auto}
+.hero{
+background:linear-gradient(135deg,#7d365a,#b45d82);
+color:white;padding:44px 20px;
+border-radius:0 0 26px 26px;text-align:center
 }
-.hero h1 { font-size:clamp(1.8rem,6vw,3rem); margin:8px 0 }
-.hero p { line-height:1.5 }
-.hero-actions {
-  display:flex; gap:10px; justify-content:center;
-  flex-wrap:wrap; margin-top:18px;
+.hero h1{font-size:2rem;margin:12px 0}
+.hero p{margin:8px auto;max-width:560px}
+h2{color:var(--wine);margin:4px 0 16px}
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+gap:12px
 }
-h2 { color:var(--wine); margin:0 0 16px }
-.cards {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:12px;
+.card{
+background:white;border-radius:16px;padding:15px;
+box-shadow:0 3px 12px #0000000d
 }
-.card {
-  background:white; border-radius:16px; padding:14px;
-  box-shadow:0 4px 14px #0001;
+.service{font-weight:700;color:var(--wine)}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.gallery img{
+width:100%;height:155px;object-fit:cover;border-radius:13px
 }
-.service { min-height:100px; display:flex; flex-direction:column; justify-content:space-between; gap:12px }
-.album-grid,.photo-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px;
+.gallery .card{padding:8px}
+form{
+display:grid;gap:11px;background:white;padding:16px;
+border-radius:16px;box-shadow:0 3px 12px #0000000d
 }
-.album { border-radius:15px; overflow:hidden; background:white; box-shadow:0 4px 12px #0001; cursor:pointer }
-.album img { width:100%; height:140px; object-fit:cover; background:var(--soft) }
-.album div { padding:10px; font-weight:700; color:var(--wine) }
-.photo-item { background:white; border-radius:14px; padding:8px; box-shadow:0 4px 12px #0001 }
-.photo-item img { width:100%; height:190px; object-fit:cover; border-radius:10px; cursor:pointer }
-.photo-item button { width:100%; margin-top:8px }
-.hidden { display:none!important }
-.panel { background:white; padding:16px; border-radius:18px; box-shadow:0 4px 16px #0001 }
-form { display:grid; gap:12px }
-input,select,textarea {
-  width:100%; padding:12px; border:1px solid #ddc9d4;
-  border-radius:10px; font:inherit; background:white;
+label{font-weight:650;font-size:.9rem}
+input,select,textarea{
+width:100%;padding:12px;border:1px solid #e2cdd8;
+border-radius:10px;background:white;font:inherit;margin-top:5px
 }
-label { font-weight:700; font-size:.9rem }
-label input,label select,label textarea { margin-top:5px; font-weight:400 }
-.price { font-size:1.3rem; font-weight:900; color:var(--wine) }
-.package { border:1px solid #ead6e1 }
-.package h3 { color:var(--wine); margin-top:0 }
-.modal {
-  position:fixed; inset:0; background:#000b; z-index:50;
-  display:flex; align-items:center; justify-content:center; padding:16px;
+textarea{min-height:90px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.status{background:#f1e5ec;border-radius:10px;padding:10px;font-size:.9rem}
+.hidden{display:none!important}
+.bottom-nav{
+position:fixed;bottom:0;left:0;right:0;background:#fff;
+box-shadow:0 -2px 14px #0001;display:flex;
+justify-content:space-around;padding:8px 3px;z-index:10
 }
-.modal-box {
-  background:white; max-width:560px; width:100%;
-  border-radius:18px; padding:14px; max-height:90vh; overflow:auto;
+.bottom-nav button{
+background:transparent;color:var(--wine);
+padding:8px 5px;font-size:.72rem;flex:1
 }
-.modal-box img { width:100%; max-height:60vh; object-fit:contain; border-radius:12px }
-footer { background:#341d2c; color:white; padding:24px 16px; text-align:center }
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; background:white;
-  border-top:1px solid #ead6e1; z-index:30;
-  display:flex; justify-content:space-around; padding:6px 3px;
-}
-.bottom-nav button {
-  background:transparent; color:var(--wine); padding:8px 4px;
-  font-size:.75rem; flex:1; border-radius:8px;
-}
-.bottom-nav button.active { background:var(--soft) }
-body { padding-bottom:66px }
-.note { color:#715a67; font-size:.85rem }
-.map-preview { height:250px; width:100%; border:0; border-radius:14px; margin-top:10px }
-.status { padding:9px 12px; border-radius:10px; background:#fff4d7; color:#6c4d00; font-weight:700 }
-.status.confirmed { background:#e3f4e9; color:#1e6a40 }
-@media(min-width:700px) {
-  header { padding:14px 6% }
-  .hero { padding:58px 24px }
-  section { padding:36px 20px }
+.bottom-nav button.active{background:var(--soft)}
+footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
+@media(min-width:650px){
+.gallery{grid-template-columns:repeat(3,1fr)}
+.gallery img{height:210px}
 }
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
+
 <header>
-  <div class="brand">✨ Magic Events & Decorators
-    <small>Make every moment magical</small>
-  </div>
-  <button class="secondary" id="langBtn" onclick="toggleLanguage()">मराठी</button>
+<div class="brand">
+✨ Magic Events & Decorators
+<small>Make every moment magical</small>
+</div>
+<button class="secondary" onclick="toggleLang()">मराठी</button>
 </header>
 
 <main>
 
-<section class="hero" id="home">
-<div class="wrap">
-<p id="heroTag">Weddings • Birthdays • Celebrations</p>
-<h1 id="heroTitle">Make Your Moments Magical ✨</h1>
-<p id="heroText">Beautiful decorations, memorable celebrations, and planning made easy.</p>
-<div class="hero-actions">
-<button onclick="go('services')">Explore Services</button>
+<section id="home">
+<div class="wrap hero">
+<p>Weddings • Birthdays • Celebrations</p>
+<h1>Make Your Moments Magical ✨</h1>
+<p>Beautiful decorations, memorable celebrations and complete event planning.</p>
 <button class="gold" onclick="go('booking')">Book Your Event</button>
-</div>
+<button class="secondary" onclick="go('services')">Explore Services</button>
 </div>
 </section>
 
 <section id="services">
 <div class="wrap">
-<h2 id="servicesTitle">Our Services</h2>
-<div class="cards" id="servicesCards"></div>
+<h2>Our Services</h2>
+<div class="cards" id="serviceCards"></div>
 </div>
 </section>
 
 <section id="gallery">
 <div class="wrap">
-<h2 id="galleryTitle">Gallery</h2>
-<div id="albumGrid" class="album-grid"></div>
-<div id="albumView" class="hidden">
-<button class="secondary" onclick="closeAlbum()">← Albums</button>
-<h3 id="albumHeading"></h3>
-<div id="albumPhotos" class="photo-grid"></div>
-</div>
-</div>
-</section>
-
-<section id="packages">
-<div class="wrap">
-<h2 id="packagesTitle">Packages & Price Estimates</h2>
-<p class="note">Starting estimates only. Final quotation depends on venue, date, design and materials.</p>
-<div class="cards">
-
-<div class="card package">
-<h3>Basic Celebration</h3>
-<p>Simple backdrop & balloon décor</p>
-<p class="price">₹4,999*</p>
-<button onclick="choosePackage('Basic Celebration',4999)">Select Package</button>
-</div>
-
-<div class="card package">
-<h3>Premium Celebration</h3>
-<p>Theme décor, backdrop & entry setup</p>
-<p class="price">₹9,999*</p>
-<button onclick="choosePackage('Premium Celebration',9999)">Select Package</button>
-</div>
-
-<div class="card package">
-<h3>Luxury Event</h3>
-<p>Custom premium decoration setup</p>
-<p class="price">₹19,999*</p>
-<button onclick="choosePackage('Luxury Event',19999)">Select Package</button>
-</div>
-
-</div>
-</div>
-</section>
-
-<section id="offers">
-<div class="wrap">
-<h2>🎁 Special Offers</h2>
-<div class="panel">
-<p>Ask us about current seasonal offers and custom combo packages.</p>
-<button onclick="go('booking')">Enquire About Offers</button>
-</div>
+<h2>Gallery</h2>
+<p>Tap an album and browse ideas for your event.</p>
+<div class="gallery" id="galleryCards"></div>
 </div>
 </section>
 
 <section id="booking">
 <div class="wrap">
-<h2 id="bookingTitle">Event Booking / Quotation</h2>
-<div class="panel">
+<h2>Event Booking / Quotation</h2>
 
 <form id="bookingForm">
 
-<label>Name
-<input name="name" required placeholder="Your full name">
+<div class="row">
+<label>Customer name
+<input name="name" required placeholder="Full name">
 </label>
 
-<label>Mobile Number
-<input name="phone" required inputmode="tel" placeholder="Mobile number">
+<label>Mobile number
+<input name="phone" required inputmode="tel" placeholder="10-digit mobile">
 </label>
+</div>
 
-<label>Event Type
+<div class="row">
+<label>Event type
 <select name="event" required>
 <option value="">Select event</option>
 <option>Wedding</option>
@@ -218,593 +164,361 @@ body { padding-bottom:66px }
 <option>Baby Welcome</option>
 <option>Name Ceremony</option>
 <option>Theme Party</option>
-<option>Car Decoration</option>
 <option>Anniversary</option>
 <option>Corporate Event</option>
 <option>Other</option>
 </select>
 </label>
 
-<label>Event Date
-<input type="date" name="date" required id="eventDate">
+<label>Event date
+<input name="date" type="date" required>
 </label>
-
-<label>Event Time
-<input type="time" name="time">
-</label>
-
-<label>Event Address
-<input name="venue" required placeholder="Full event address">
-</label>
-
-<h3>📍 Event Location</h3>
-<p>Customer can use their current location or enter the venue address. Use Google Maps to find the exact pin and paste coordinates below.</p>
-
-<button type="button" class="secondary" onclick="getMyLocation()">📍 Use My Location</button>
-
-<iframe id="pickerMap" class="map-preview"
-src="https://maps.google.com/maps?q=Pune&output=embed"
-loading="lazy"></iframe>
-
-<label>Map Coordinates (optional)
-<input name="coords" id="coords" placeholder="Latitude, Longitude">
-</label>
-
-<label>Decoration Package
-<select name="package" id="packageSelect">
-<option value="">Custom / not selected</option>
-<option value="Basic Celebration|4999">Basic Celebration – ₹4,999</option>
-<option value="Premium Celebration|9999">Premium Celebration – ₹9,999</option>
-<option value="Luxury Event|19999">Luxury Event – ₹19,999</option>
-</select>
-</label>
-
-<label>Estimated Budget (₹)
-<input name="budget" type="number" min="0" placeholder="Your budget">
-</label>
-
-<label>Decoration / Requirements
-<textarea name="details" rows="3" placeholder="Describe your decoration ideas"></textarea>
-</label>
-
-<div id="selectedDesign" class="hidden"></div>
-
-<hr>
-
-<h3>💳 Advance Payment</h3>
-<p>Pay advance using QR / PhonePe / UPI.</p>
-
-<div class="panel">
-<p><strong>UPI QR Code</strong></p>
-
-<div id="qrPlaceholder" class="status">
-QR placeholder — owner must add real QR image
 </div>
 
-<p><strong>PhonePe / UPI Payment Details</strong></p>
-<p id="phonepeDisplay">Payment details not configured</p>
+<div class="row">
+<label>Event time
+<input name="time" type="time">
+</label>
 
-<button type="button" class="secondary" onclick="copyPayment()">
-Copy Payment Details
+<label>Budget / package amount (₹)
+<input name="package" type="number" min="0" placeholder="Estimated total">
+</label>
+</div>
+
+<div class="row">
+<label>Advance payment (₹)
+<input name="advance" type="number" min="0" placeholder="Advance amount">
+</label>
+
+<label>Payment UTR / Transaction ID
+<input name="utr" placeholder="Optional">
+</label>
+</div>
+
+<label>Event venue / address
+<textarea name="venue" placeholder="Enter full venue/address" required></textarea>
+</label>
+
+<label>Google Maps link
+<input name="maplink" type="url" placeholder="Paste Maps link">
+</label>
+
+<button type="button" class="secondary" onclick="getLocation()">
+📍 Capture event GPS
 </button>
+
+<div class="status" id="locationStatus">
+Location is set by customer. Paste Maps link or use GPS.
 </div>
 
-<label>Advance Amount Paid (₹)
-<input name="advance" type="number" min="0" placeholder="Enter amount paid">
+<input name="coords" id="coords" type="hidden">
+
+<label>Event details
+<textarea name="details" placeholder="Decoration ideas, guest count, special requests"></textarea>
 </label>
 
-<label>UPI Transaction ID / UTR
-<input name="utr" placeholder="Payment reference number">
+<button type="button" class="gold" onclick="showPayment()">
+Show payment QR / Pay with UPI
+</button>
+
+<div id="paymentArea" class="hidden status"></div>
+
+<label>Payment proof photo
+<input name="paymentProof" type="file" accept="image/*">
 </label>
 
-<label>Upload Payment Screenshot (optional)
-<input type="file" name="paymentProof" accept="image/*">
-</label>
+<button type="submit">Send Booking on WhatsApp</button>
 
-<button type="submit">Submit Booking & Payment Enquiry on WhatsApp</button>
+<div id="saveStatus" class="status">
+Booking WhatsApp message ready. Firestore saving requires secure rules.
+</div>
 
-<small class="note">
-Payment remains pending verification until checked by Magic Events.
-</small>
 </form>
-
-<div id="quote" class="hidden panel" style="margin-top:14px"></div>
-</div>
-</div>
-</section>
-
-<section id="bookingStatus">
-<div class="wrap">
-<h2>Booking Confirmation & Event Map</h2>
-<div class="panel">
-
-<p>
-Booking confirmation and payment verification currently need manual confirmation.
-A live customer status system needs a connected database.
-</p>
-
-<label>Booking Reference
-<input id="statusRef" placeholder="Enter your booking reference">
-</label>
-
-<button onclick="lookupStatus()">Check Status</button>
-
-<div id="statusResult"></div>
-
-</div>
-</div>
-</section>
-
-<section id="reviews">
-<div class="wrap">
-<h2>⭐ Customer Reviews</h2>
-<div class="panel">
-<p>We’d love to hear about your experience!</p>
-
-<form onsubmit="sendReview(event)">
-<label>Your Name
-<input id="reviewName" required>
-</label>
-
-<label>Your Review
-<textarea id="reviewText" rows="3" required placeholder="Write your feedback"></textarea>
-</label>
-
-<button type="submit">Share Review</button>
-</form>
-</div>
 </div>
 </section>
 
 <section id="contact">
 <div class="wrap">
 <h2>Contact Us</h2>
-<div class="cards">
-
 <div class="card">
-<strong>📞 Call</strong>
-<p>9762627656</p>
-<a class="btn" href="tel:9762627656">Call Now</a>
+<p><b>Magic Events & Decorators</b></p>
+<p>📞 9762627656 / 7040453659 / 8669262653</p>
+<a class="btn" href="https://wa.me/919762627656">WhatsApp Us</a>
 </div>
-
-<div class="card">
-<strong>💬 WhatsApp</strong>
-<p>Booking and enquiry</p>
-<a class="btn" href="https://wa.me/919762627656" target="_blank">WhatsApp</a>
-</div>
-
-<div class="card">
-<strong>📍 Location</strong>
-<p>Find Magic Events & Decorators</p>
-<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Magic+Events+and+Decorators" target="_blank">Open Maps</a>
-</div>
-
-</div>
-<p>Other contact numbers: 7040453659 • 8669262653</p>
 </div>
 </section>
 
 </main>
 
-<footer>
-<strong>Magic Events & Decorators</strong>
-<p>Let's make your celebration unforgettable ✨</p>
-</footer>
-
 <nav class="bottom-nav">
-<button class="active" onclick="go('home',this)">🏠 Home</button>
-<button onclick="go('services',this)">🎉 Services</button>
-<button onclick="go('gallery',this)">🖼️ Gallery</button>
-<button onclick="go('booking',this)">📅 Book</button>
-<button onclick="go('contact',this)">☎ Contact</button>
+<button onclick="go('home')">🏠 Home</button>
+<button onclick="go('services')">✨ Services</button>
+<button onclick="go('gallery')">🖼 Gallery</button>
+<button onclick="go('booking')">📝 Booking</button>
+<button onclick="go('contact')">☎ Contact</button>
 </nav>
 
-<div id="photoModal" class="modal hidden" onclick="if(event.target.id==='photoModal')closePhoto()">
-<div class="modal-box">
-<button class="secondary" onclick="closePhoto()">Close ✕</button>
-<img id="modalImage" src="" alt="Selected decoration">
-<div class="hero-actions">
-<button onclick="bookSelectedPhoto()">Book This Design</button>
-<button class="secondary" onclick="shareSelectedPhoto()">Share Photo</button>
-</div>
-</div>
-</div>
+<footer>Magic Events & Decorators</footer>
 <script>
-// ===== OWNER PAYMENT SETTINGS =====
-// खाली तुमचे खरे payment details नंतर टाका.
-const phone = '919762627656';
-const PAYMENT_UPI_ID = 'YOUR-UPI-ID-HERE';
-const PAYMENT_PHONEPE_NUMBER = 'ADD-PHONEPE-NUMBER';
-const PAYMENT_QR_IMAGE = 'payment-qr.png';
-
-// ===== SERVICES =====
-const services = [
-['Wedding Planner','Wedding','💍'],
-['Birthday Party','Birthday','🎂'],
-['Kitty Party','Kitty','🎀'],
-['Baby Shower','Baby','🍼'],
-['Baby Welcome','Baby','👶'],
-['Name Ceremony','Name','🪷'],
-['Theme Party','Theme','🎭'],
-['Car Decoration','Car','🚘'],
-['Anniversary','Anniversary','❤️'],
-['Catering Services','Catering','🍽️'],
-['Corporate Events','Corporate','🏢'],
-['Anchor & Photographer','Other','🎤'],
-['Sound & Lights','Other','🔊'],
-['Mehndi & Makeup Artist','Other','💄']
+const serviceList=[
+"Wedding Planner","Birthday Party","Kitty Party",
+"Baby Shower","Baby Welcome","Name Ceremony",
+"Theme Party","Car Decoration","Anniversary Party",
+"Catering Services","Corporate Events",
+"Anchor & Photographer","Sound System & Lights",
+"Mehndi & Makeup Artist"
 ];
 
-// ===== GALLERY ALBUMS =====
-const albumData = {
-birthday:{title:'Birthday Album',images:['gallery1.jpg','gallery2.jpg','gallery3.jpg']},
-wedding:{title:'Wedding Album',images:['gallery4.jpg','gallery5.jpg','gallery6.jpg','gallery7.jpg']},
-baby:{title:'Baby Celebration',images:['gallery8.jpg','gallery9.jpg']},
-car:{title:'Car Decoration',images:['gallery10.jpg','gallery1.jpg']},
-theme:{title:'Theme Party',images:['gallery2.jpg','gallery3.jpg']},
-other:{title:'Other Events',images:['gallery4.jpg','gallery5.jpg']}
-};
-
-let selectedPhoto = '';
-let selectedAlbum = '';
-let isMarathi = false;
-
-const albumCovers = [
-['birthday','🎂 Birthday'],
-['wedding','💍 Wedding'],
-['baby','🍼 Baby Events'],
-['car','🚘 Car Decoration'],
-['theme','🎭 Theme Party'],
-['other','✨ Other Events']
+const albumList=[
+["Wedding","https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800"],
+["Birthday","https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800"],
+["Baby Shower","https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800"],
+["Stage Decor","https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=800"],
+["Floral Decor","https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800"],
+["Celebration","https://images.unsplash.com/photo-1464366400600-7168b8af9bc5?auto=format&fit=crop&w=800"]
 ];
 
-// ===== NAVIGATION =====
-function go(id,btn) {
-  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
-  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
-
-  if(btn) {
-    btn.classList.add('active');
-  } else {
-    const map={home:0,services:1,gallery:2,booking:3,contact:4};
-    document.querySelectorAll('.bottom-nav button')[map[id]||0]?.classList.add('active');
-  }
-}
-
-// ===== RENDER SERVICES =====
-function renderServices() {
-  document.getElementById('servicesCards').innerHTML =
-    services.map(s=>`
-      <div class="card service">
-        <strong>${s[2]} ${s[0]}</strong>
-        <button class="secondary" onclick="openAlbumByService('${s[1]}')">
-          View Photos / Book
-        </button>
-      </div>
-    `).join('');
-}
-
-// ===== GALLERY =====
-function renderAlbums() {
-  document.getElementById('albumGrid').innerHTML =
-    albumCovers.map(([id,label],i)=>`
-      <div class="album" onclick="openAlbum('${id}')">
-        <img src="gallery${i+1}.jpg" alt="${label}">
-        <div>${label}</div>
-      </div>
-    `).join('');
-}
-
-function openAlbum(id) {
-  selectedAlbum=id;
-  const a=albumData[id];
-  if(!a)return;
-
-  document.getElementById('albumGrid').classList.add('hidden');
-  document.getElementById('albumView').classList.remove('hidden');
-  document.getElementById('albumHeading').textContent=a.title;
-
-  document.getElementById('albumPhotos').innerHTML =
-    a.images.map(src=>`
-      <div class="photo-item">
-        <img src="${src}" alt="Decoration photo" onclick="showPhoto('${src}')">
-        <button onclick="showPhoto('${src}')">Preview / Book</button>
-      </div>
-    `).join('');
-}
-
-function closeAlbum() {
-  document.getElementById('albumGrid').classList.remove('hidden');
-  document.getElementById('albumView').classList.add('hidden');
-}
-
-function openAlbumByService(type) {
-  const key =
-    type==='Birthday'?'birthday':
-    type==='Wedding'?'wedding':
-    type==='Baby'?'baby':
-    type==='Car'?'car':
-    type==='Theme'?'theme':'other';
-
-  go('gallery');
-  openAlbum(key);
-}
-
-// ===== PHOTO PREVIEW & BOOK =====
-function showPhoto(src) {
-  selectedPhoto=src;
-  document.getElementById('modalImage').src=src;
-  document.getElementById('photoModal').classList.remove('hidden');
-}
-
-function closePhoto() {
-  document.getElementById('photoModal').classList.add('hidden');
-}
-
-function bookSelectedPhoto() {
-  closePhoto();
-  const box=document.getElementById('selectedDesign');
-  box.innerHTML=`<p><strong>Selected Design:</strong> ${selectedPhoto}</p>`;
-  box.classList.remove('hidden');
-  go('booking');
-}
-
-// ===== PACKAGES =====
-function choosePackage(name,price) {
-  document.getElementById('packageSelect').value=name+'|'+price;
-  document.querySelector('[name=budget]').value=price;
-  go('booking');
-  calculateQuote();
-}
-
-function calculateQuote() {
-  const sel=document.getElementById('packageSelect').value;
-  if(!sel)return;
-
-  const [name,price]=sel.split('|');
-  const q=document.getElementById('quote');
-
-  q.innerHTML=`
-    <strong>Estimate</strong>
-    <p>Package: ${name}</p>
-    <p class="price">Estimated total: ₹${Number(price).toLocaleString('en-IN')}</p>
-    <small>Final amount will be confirmed after discussion.</small>
-  `;
-  q.classList.remove('hidden');
-}
-
-document.getElementById('packageSelect')
-.addEventListener('change',calculateQuote);
-
-// ===== PAYMENT DISPLAY =====
-function setupPaymentDisplay() {
-  document.getElementById('phonepeDisplay').textContent =
-    `UPI ID: ${PAYMENT_UPI_ID} | PhonePe Number: ${PAYMENT_PHONEPE_NUMBER}`;
-
-  const holder=document.getElementById('qrPlaceholder');
-  const img=new Image();
-
-  img.src=PAYMENT_QR_IMAGE;
-
-  img.onload=()=>{
-    holder.innerHTML=`
-      <img src="${PAYMENT_QR_IMAGE}"
-      alt="UPI QR Code"
-      style="max-width:220px;width:100%;display:block;margin:auto">
-      <p>Scan this QR to pay</p>
-    `;
-  };
-}
-
-function copyPayment() {
-  const text=`UPI ID: ${PAYMENT_UPI_ID} | PhonePe: ${PAYMENT_PHONEPE_NUMBER}`;
-
-  if(navigator.clipboard) {
-    navigator.clipboard.writeText(text)
-    .then(()=>alert('Payment details copied!'))
-    .catch(()=>alert(text));
-  } else {
-    alert(text);
-  }
-}
-
-// ===== CUSTOMER LOCATION =====
-function getMyLocation() {
-  if(!navigator.geolocation) {
-    alert('Location is not supported in this browser.');
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const lat=pos.coords.latitude;
-    const lng=pos.coords.longitude;
-
-    document.getElementById('coords').value=`${lat}, ${lng}`;
-
-    document.getElementById('pickerMap').src=
-      `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
-
-    const address=document.querySelector('[name=venue]');
-    if(!address.value) address.value=`${lat}, ${lng}`;
-
-  },()=>{
-    alert('Location permission denied. Address manually enter करा.');
-  },{enableHighAccuracy:true,timeout:12000});
-}
-
-// ===== BOOKING WHATSAPP MESSAGE =====
-function bookingText(data) {
-  return `✨ MAGIC EVENTS & DECORATORS BOOKING
-
-Name: ${data.get('name')}
-Phone: ${data.get('phone')}
-Event: ${data.get('event')}
-Date: ${data.get('date')}
-Time: ${data.get('time')||'Not specified'}
-Venue: ${data.get('venue')||'Not specified'}
-Map Coordinates: ${data.get('coords')||'Not provided'}
-Package: ${data.get('package')||'Custom'}
-Budget: ${data.get('budget')||'Not specified'}
-Advance Paid: ₹${data.get('advance')||'0'}
-UPI UTR: ${data.get('utr')||'Not provided'}
-Requirements: ${data.get('details')||'None'}
-Selected Design: ${selectedPhoto||'No photo selected'}
-
-PAYMENT STATUS: PENDING VERIFICATION`;
-}
-
-document.getElementById('bookingForm')
-.addEventListener('submit',async e=>{
-  e.preventDefault();
-
-  const data=new FormData(e.target);
-  const text=bookingText(data);
-  const ref='MED'+Date.now().toString().slice(-8);
-  const proof=data.get('paymentProof');
-
-  try {
-    let files=[];
-
-    if(selectedPhoto) {
-      const r=await fetch(selectedPhoto);
-      if(r.ok) {
-        const blob=await r.blob();
-        files.push(new File([blob],
-          selectedPhoto.split('/').pop()||'design.jpg',
-          {type:blob.type||'image/jpeg'}));
-      }
-    }
-
-    if(proof && proof.size>0) files.push(proof);
-
-    if(files.length && navigator.share &&
-       navigator.canShare && navigator.canShare({files})) {
-      await navigator.share({
-        files,
-        title:'Magic Events Booking',
-        text:text+'\nBooking Reference: '+ref
-      });
-      return;
-    }
-  } catch(err) {
-    // Fallback to WhatsApp text message below.
-  }
-
-  window.open(
-    'https://wa.me/'+phone+'?text='+encodeURIComponent(text+'\nBooking Reference: '+ref),
-    '_blank'
-  );
-
-  alert('Booking enquiry WhatsApp मध्ये उघडण्याचा प्रयत्न केला. Payment verify करून booking confirm केली जाईल. Reference: '+ref);
+// SERVICES
+serviceList.forEach(s=>{
+const el=document.createElement("div");
+el.className="card service";
+el.textContent="✨ "+s;
+document.getElementById("serviceCards").appendChild(el);
 });
 
-// ===== PHOTO SHARE =====
-async function shareSelectedPhoto() {
-  if(!selectedPhoto)return;
+// GALLERY
+albumList.forEach(([name,url])=>{
+const el=document.createElement("div");
+el.className="card";
+el.innerHTML=`
+<img src="${url}" alt="${name}" loading="lazy">
+<b>${name}</b>
+<button style="margin-top:8px;width:100%"
+onclick="selectAlbum('${name}')">
+Book this theme
+</button>`;
+document.getElementById("galleryCards").appendChild(el);
+});
 
-  try {
-    const r=await fetch(selectedPhoto);
-    if(!r.ok)throw new Error();
-
-    const b=await r.blob();
-    const f=new File([b],
-      selectedPhoto.split('/').pop()||'photo.jpg',
-      {type:b.type||'image/jpeg'});
-
-    if(navigator.share && navigator.canShare({files:[f]})) {
-      await navigator.share({files:[f],title:'Decoration Photo'});
-    } else {
-      alert('या browser मध्ये photo sharing उपलब्ध नाही.');
-    }
-  } catch {
-    alert('Photo file उपलब्ध नाही. Gallery file तपासा.');
-  }
+// NAVIGATION
+function go(id){
+document.getElementById(id).scrollIntoView({behavior:"smooth"});
+document.querySelectorAll(".bottom-nav button")
+.forEach(x=>x.classList.remove("active"));
 }
 
-// ===== BOOKING STATUS DEMO =====
-function lookupStatus() {
-  const ref=document.getElementById('statusRef').value.trim();
-  if(!ref) {
-    alert('Booking reference टाका.');
-    return;
-  }
-
-  document.getElementById('statusResult').innerHTML=`
-    <p class="status">
-      Reference: ${ref.replace(/[<>]/g,'')}<br>
-      Status lookup साठी live database/backend जोडणे आवश्यक आहे.
-    </p>
-    <p class="note">Confirmed bookings नंतर saved event location map दाखवू शकतो.</p>
-  `;
+// GALLERY BOOKING
+function selectAlbum(name){
+document.querySelector('[name="event"]').value=
+name==="Wedding"?"Wedding":
+name==="Birthday"?"Birthday Party":name;
+go("booking");
 }
 
-// ===== CUSTOMER REVIEW SHARE =====
-function sendReview(e) {
-  e.preventDefault();
+// CUSTOMER LOCATION
+function getLocation(){
+let status=document.getElementById("locationStatus");
 
-  const text=`Customer Review for Magic Events & Decorators
-Name: ${document.getElementById('reviewName').value}
-Review: ${document.getElementById('reviewText').value}`;
-
-  window.open(
-    'https://wa.me/'+phone+'?text='+encodeURIComponent(text),
-    '_blank'
-  );
+if(!navigator.geolocation){
+status.textContent="GPS unavailable. Paste Maps link instead.";
+return;
 }
 
-// ===== MARATHI / ENGLISH SWITCH =====
-function toggleLanguage() {
-  isMarathi=!isMarathi;
-  document.getElementById('langBtn').textContent=isMarathi?'English':'मराठी';
+status.textContent="Getting GPS…";
 
-  const t=isMarathi?{
-    heroTitle:'तुमचे क्षण खास बनवा ✨',
-    heroText:'सुंदर सजावट, अविस्मरणीय कार्यक्रम आणि सोपे नियोजन.',
-    heroTag:'लग्न • वाढदिवस • समारंभ',
-    servicesTitle:'आमच्या सेवा',
-    galleryTitle:'फोटो गॅलरी',
-    packagesTitle:'पॅकेज व अंदाजित किंमत',
-    bookingTitle:'कार्यक्रम बुकिंग / कोटेशन'
-  }:{
-    heroTitle:'Make Your Moments Magical ✨',
-    heroText:'Beautiful decorations, memorable celebrations, and planning made easy.',
-    heroTag:'Weddings • Birthdays • Celebrations',
-    servicesTitle:'Our Services',
-    galleryTitle:'Gallery',
-    packagesTitle:'Packages & Price Estimates',
-    bookingTitle:'Event Booking / Quotation'
-  };
-
-  Object.entries(t).forEach(([id,v])=>{
-    const el=document.getElementById(id);
-    if(el)el.textContent=v;
-  });
+navigator.geolocation.getCurrentPosition(
+p=>{
+let c=p.coords.latitude+","+p.coords.longitude;
+document.getElementById("coords").value=c;
+status.innerHTML=`GPS saved: ${c} ·
+<a target="_blank" href="https://maps.google.com/?q=${c}">
+View Map</a>`;
+},
+()=>{
+status.textContent="Location denied/unavailable. Paste Maps link manually.";
+},
+{timeout:12000,enableHighAccuracy:true}
+);
 }
 
-// ===== START APP =====
-renderServices();
-renderAlbums();
-setupPaymentDisplay();
+// PAYMENT QR
+// Replace this with your actual UPI ID later
+const UPI_ID="YOUR_UPI_ID_HERE";
 
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+function showPayment(){
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
-  authDomain: "magiceventsadmin.firebaseapp.com",
-  projectId: "magiceventsadmin",
-  storageBucket: "magiceventsadmin.firebasestorage.app",
-  messagingSenderId: "129450507612",
-  appId: "1:129450507612:web:56ede0b1b409478e781599",
-  measurementId: "G-QVNH8B3WQR"
+let amt=
+document.querySelector('[name=advance]').value||
+document.querySelector('[name=package]').value||
+"0";
+
+let area=document.getElementById("paymentArea");
+area.classList.remove("hidden");
+
+if(UPI_ID==="YOUR_UPI_ID_HERE"){
+area.textContent="UPI ID is not added yet. Payment QR will be activated after adding your UPI ID.";
+return;
+}
+
+let uri=`upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=Magic%20Events&am=${encodeURIComponent(amt)}&cu=INR`;
+
+area.innerHTML=`
+Advance amount ₹${amt}
+<br>
+<img style="width:200px"
+src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uri)}">
+<br>
+<a class="btn" href="${uri}">Open UPI app</a>
+`;
+}
+
+// FIREBASE CONFIG
+const firebaseConfig={
+apiKey:"AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
+authDomain:"magiceventsadmin.firebaseapp.com",
+projectId:"magiceventsadmin",
+storageBucket:"magiceventsadmin.firebasestorage.app",
+messagingSenderId:"129450507612",
+appId:"1:129450507612:web:56ede0b1b409478e781599",
+measurementId:"G-QVNH8B3WQR"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+let db=null;
+let auth=null;
 
-console.log("Magic Events Firebase Connected!");
+try{
+firebase.initializeApp(firebaseConfig);
+db=firebase.firestore();
+auth=firebase.auth();
+console.log("Firebase initialized");
+}catch(e){
+console.warn("Firebase initialization error",e);
+}
+
+// WHATSAPP BOOKING MESSAGE
+function composeBooking(d,ref){
+
+return `✨ MAGIC EVENTS & DECORATORS BOOKING REQUEST
+
+Booking Ref: ${ref}
+
+Customer: ${d.name}
+Phone: ${d.phone}
+Event: ${d.event}
+Date: ${d.date}
+Time: ${d.time||"Not specified"}
+
+Venue: ${d.venue}
+
+Maps: ${
+d.maplink||
+(d.coords?
+"https://maps.google.com/?q="+d.coords:
+"Not provided")
+}
+
+Package Total: ₹${d.package||"Not specified"}
+Advance: ₹${d.advance||"Not specified"}
+
+UTR: ${d.utr||"Not provided"}
+
+Details: ${d.details||"None"}
+
+Please confirm booking and payment.`;
+}
+
+// BOOKING FORM
+document.getElementById("bookingForm")
+.addEventListener("submit",async ev=>{
+
+ev.preventDefault();
+
+let form=ev.target;
+let d=Object.fromEntries(new FormData(form).entries());
+
+let ref="MED"+Date.now().toString().slice(-8);
+
+document.getElementById("saveStatus")
+.textContent="Preparing booking…";
+
+// FIRESTORE SAVE ATTEMPT
+try{
+
+if(auth&&db){
+
+await auth.signInAnonymously();
+
+await db.collection("Bookings").add({
+
+customerName:d.name,
+customerPhone:d.phone,
+eventType:d.event,
+eventDate:d.date,
+eventTime:d.time||"",
+eventAddress:d.venue,
+mapsLink:d.maplink||"",
+eventCoordinates:d.coords||"",
+totalAmount:Number(d.package||0),
+advanceAmount:Number(d.advance||0),
+utr:d.utr||"",
+details:d.details||"",
+bookingReference:ref,
+bookingStatus:"Pending",
+paymentStatus:"Unverified",
+uid:auth.currentUser.uid,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+document.getElementById("saveStatus")
+.textContent="Saved to Firestore! Opening WhatsApp…";
+
+}
+
+}catch(err){
+
+console.log("Firestore save:",err);
+
+document.getElementById("saveStatus")
+.textContent="Firestore save blocked by rules. WhatsApp booking will still open.";
+
+}
+
+// OPEN WHATSAPP
+let msg=composeBooking(d,ref);
+
+let url="https://wa.me/919762627656?text="+
+encodeURIComponent(msg);
+
+let proof=form.querySelector('[name=paymentProof]').files[0];
+
+// Try sharing payment proof if supported
+if(proof&&navigator.share&&navigator.canShare&&
+navigator.canShare({files:[proof]})){
+
+try{
+
+await navigator.share({
+title:"Magic Events Booking",
+text:msg,
+files:[proof]
+});
+
+}catch(_){
+window.open(url,"_blank");
+}
+
+}else{
+window.open(url,"_blank");
+}
+
+});
+
+// LANGUAGE BUTTON
+function toggleLang(){
+alert("Marathi language option is coming in a future update.");
+}
 </script>
+
 </body>
 </html>
