@@ -1,4 +1,4 @@
-const CACHE = "magic-events-v2";
+const CACHE = "magic-events-v3";
 
 const FILES = [
   "./",
