@@ -390,7 +390,7 @@ Object.keys(albumData).forEach(album => {
     </div>
   `;
 
-  card.onclick = () => showPreview(album, 0);
+  card.onclick = () => openAlbum(album);
   galleryCards.appendChild(card);
 });
 
@@ -412,7 +412,31 @@ const preview=document.getElementById("photoPreview");
 preview.classList.remove("hidden");
 preview.style.display="flex";
 }
+function openAlbum(album){
+  const galleryCards = document.getElementById("galleryCards");
+  galleryCards.innerHTML = "";
 
+  albumData[album].images.forEach((photo,index)=>{
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${photo}" loading="lazy"
+      style="width:100%;height:220px;object-fit:cover;border-radius:15px">
+
+      <div style="padding:10px;color:#7d365a;font-weight:bold">
+        ${albumData[album].title} ${index+1}
+      </div>
+    `;
+
+    card.onclick = () => showPreview(album,index);
+    galleryCards.appendChild(card);
+  });
+
+  document.getElementById("gallery").scrollIntoView({
+    behavior:"smooth"
+  });
+}
 function closePreview(){
 const preview=document.getElementById("photoPreview");
 preview.style.display="none";
