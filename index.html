@@ -262,9 +262,8 @@ style="width:220px;max-width:100%;border:1px solid #ddd;border-radius:12px;paddi
 <label>Payment Screenshot Link</label>
 <input type="url" id="paymentPhotoLink" placeholder="Paste screenshot direct link here">
 <button onclick="sharePaymentScreenshot()" class="secondary" style="width:100%;margin-top:10px">
-📷 Send Screenshot + Message on Whabutton
+📷 Send Screenshot + Message on WhatsApp
 </button>
-</div>
 <button onclick="payNow()">💳 Pay Advance</button>
   
 </div>
@@ -563,7 +562,44 @@ alert("Your phone does not support sharing photo and message together.");
 }
 
 
+async function sharePaymentScreenshot(){
+  const utr = document.getElementById("paymentUTR").value.trim();
+  const file = document.getElementById("paymentScreenshot").files[0];
 
+  if(!utr){
+    alert("Please enter Transaction ID / UTR");
+    return;
+  }
+
+  if(!file){
+    alert("Please select Payment Screenshot");
+    return;
+  }
+
+  const message =
+    "💰 PAYMENT CONFIRMATION\n\n" +
+    "Magic Events & Decorators\n" +
+    "UPI ID: 9762627656-3@ybl\n" +
+    "Transaction ID: " + utr + "\n" +
+    "Payment Screenshot attached 📷\n" +
+    "Thank you! 🙏";
+
+  try{
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        title: "Payment Confirmation",
+        text: message,
+        files: [file]
+      });
+    }else{
+      alert("Your phone does not support sharing photo and message together.");
+    }
+  }catch(err){
+    if(err.name !== "AbortError"){
+      alert("Share failed. Please try again.");
+    }
+  }
+   }
 // PAYMENT FUNCTION
 function payNow(){
 const upi="9762627656-3@ybl";
