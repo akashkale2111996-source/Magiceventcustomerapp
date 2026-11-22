@@ -415,7 +415,27 @@ preview.style.display="flex";
 function openAlbum(album){
   const galleryCards = document.getElementById("galleryCards");
   galleryCards.innerHTML = "";
-
+const backBtn = document.createElement("button");
+backBtn.innerHTML = "⬅ Back to Gallery";
+backBtn.className = "secondary";
+backBtn.style.cssText = "width:100%;margin:10px 0;padding:14px";
+backBtn.onclick = () => {
+  galleryCards.innerHTML = "";
+  Object.keys(albumData).forEach(albumName => {
+    const folder = document.createElement("div");
+    folder.className = "card";
+    folder.innerHTML = `
+      <img src="${albumData[albumName].images[0]}"
+      style="width:100%;height:180px;object-fit:cover;border-radius:15px">
+      <div style="padding:10px;color:#7d365a;font-weight:bold">
+        ${albumData[albumName].title}
+      </div>
+    `;
+    folder.onclick = () => openAlbum(albumName);
+    galleryCards.appendChild(folder);
+  });
+};
+galleryCards.appendChild(backBtn);
   albumData[album].images.forEach((photo,index)=>{
     const card = document.createElement("div");
     card.className = "card";
