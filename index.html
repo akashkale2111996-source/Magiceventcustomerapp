@@ -244,6 +244,8 @@ Wedding • Birthday • Decoration • Catering
 <button onclick="go('services')" id="nav-services">🎉 Services</button>
 <button onclick="go('gallery')" id="nav-gallery">🖼 Gallery</button>
 <button onclick="go('booking')" id="nav-booking">📝 Booking</button>
+  <button onclick="go('payment')" id="nav-payment">💰 Payment</button>
+<button onclick="go('contact')" id="nav-contact">📞 Contact</button>
 </nav>
 
 <script>
@@ -463,6 +465,17 @@ const whatsappURL=
 window.open(whatsappURL,"_blank");
 
 });
+// PAYMENT FUNCTION
+function payNow(){
+const upi="YOUR-UPI-ID-HERE";
+const name="Magic Events & Decorators";
+
+const url="upi://pay?pa="+encodeURIComponent(upi)+
+"&pn="+encodeURIComponent(name)+
+"&cu=INR";
+
+window.location.href=url;
+}
 
 // INIT
 go("home");
