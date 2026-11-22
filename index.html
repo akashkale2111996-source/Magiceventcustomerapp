@@ -249,6 +249,22 @@ style="width:220px;max-width:100%;border:1px solid #ddd;border-radius:12px;paddi
 <p><b>UPI ID</b></p>
 <p>9762627656-3@ybl</p>
 </div>
+  <!-- PAYMENT CONFIRMATION -->
+<div class="card" style="margin-top:15px">
+
+<h3>✅ Payment Confirmation</h3>
+
+<label>Transaction ID / UTR Number</label>
+<input id="paymentUTR" placeholder="Enter UTR / Transaction ID">
+
+<label>Payment Screenshot</label>
+<input type="file" id="paymentScreenshot" accept="image/*">
+
+<button onclick="sendPaymentConfirmation()" style="width:100%;margin-top:12px">
+📲 Send Payment Details on WhatsApp
+</button>
+
+</div>
 <button onclick="payNow()">💳 Pay Advance</button>
   
 </div>
@@ -510,6 +526,31 @@ const whatsappURL=
 window.open(whatsappURL,"_blank");
 
 });
+  // PAYMENT CONFIRMATION
+function sendPaymentConfirmation(){
+const utr=document.getElementById("paymentUTR").value;
+const file=document.getElementById("paymentScreenshot").files[0];
+
+if(!utr){
+alert("Please enter Transaction ID / UTR");
+return;
+}
+
+let message=
+"💰 PAYMENT CONFIRMATION\n\n"+
+"Magic Events & Decorators\n"+
+"UPI ID: 9762627656-3@ybl\n"+
+"Transaction ID: "+utr+"\n\n"+
+"Payment screenshot attached separately if selected.";
+
+const url="https://wa.me/919762627656?text="+encodeURIComponent(message);
+
+window.open(url,"_blank");
+
+if(file){
+alert("WhatsApp chat opened. Please attach your payment screenshot manually.");
+}
+}
 // PAYMENT FUNCTION
 function payNow(){
 const upi="9762627656-3@ybl";
