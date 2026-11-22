@@ -259,7 +259,8 @@ style="width:220px;max-width:100%;border:1px solid #ddd;border-radius:12px;paddi
 
 <label>Payment Screenshot</label>
 <input type="file" id="paymentScreenshot" accept="image/*">
-
+<label>Payment Screenshot Link</label>
+<input type="url" id="paymentPhotoLink" placeholder="Paste screenshot direct link here">
 <button onclick="sendPaymentConfirmation()" style="width:100%;margin-top:12px">
 📲 Send Payment Details on WhatsApp
 </button>
@@ -549,6 +550,34 @@ window.open(url,"_blank");
 
 if(file){
 alert("WhatsApp chat opened. Please attach your payment screenshot manually.");
+}
+  // PAYMENT PHOTO LINK
+function sendPaymentLink(){
+
+const utr = document.getElementById("paymentUTR").value.trim();
+const photoLink = document.getElementById("paymentPhotoLink").value.trim();
+
+if(!utr){
+alert("Enter Transaction ID / UTR");
+return;
+}
+
+if(!photoLink){
+alert("Paste Payment Screenshot Link");
+return;
+}
+
+const message =
+"💰 PAYMENT CONFIRMATION\n\n"+
+"Magic Events & Decorators\n"+
+"UPI ID: 9762627656-3@ybl\n"+
+"Transaction ID: "+utr+"\n"+
+"Payment Screenshot: "+photoLink+"\n\n"+
+"Thank you! 🙏";
+
+const url = "https://wa.me/919762627656?text="+encodeURIComponent(message);
+
+window.open(url,"_blank");
 }
 }
 // PAYMENT FUNCTION
