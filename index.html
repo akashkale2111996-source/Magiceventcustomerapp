@@ -529,41 +529,17 @@ window.open(whatsappURL,"_blank");
 });
   // PAYMENT CONFIRMATION
 function sendPaymentConfirmation(){
-const utr=document.getElementById("paymentUTR").value;
-const file=document.getElementById("paymentScreenshot").files[0];
+
+const utr = document.getElementById("paymentUTR").value.trim();
+const file = document.getElementById("paymentScreenshot").files[0];
 
 if(!utr){
 alert("Please enter Transaction ID / UTR");
 return;
 }
 
-let message=
-"💰 PAYMENT CONFIRMATION\n\n"+
-"Magic Events & Decorators\n"+
-"UPI ID: 9762627656-3@ybl\n"+
-"Transaction ID: "+utr+"\n\n"+
-"Payment screenshot attached separately if selected.";
-
-const url="https://wa.me/919762627656?text="+encodeURIComponent(message);
-
-window.open(url,"_blank");
-
-if(file){
-alert("WhatsApp chat opened. Please attach your payment screenshot manually.");
-}
-  // PAYMENT PHOTO LINK
-function sendPaymentLink(){
-
-const utr = document.getElementById("paymentUTR").value.trim();
-const photoLink = document.getElementById("paymentPhotoLink").value.trim();
-
-if(!utr){
-alert("Enter Transaction ID / UTR");
-return;
-}
-
-if(!photoLink){
-alert("Paste Payment Screenshot Link");
+if(!file){
+alert("Please select Payment Screenshot");
 return;
 }
 
@@ -572,14 +548,23 @@ const message =
 "Magic Events & Decorators\n"+
 "UPI ID: 9762627656-3@ybl\n"+
 "Transaction ID: "+utr+"\n"+
-"Payment Screenshot: "+photoLink+"\n\n"+
+"Payment Screenshot attached 📷\n"+
 "Thank you! 🙏";
 
-const url = "https://wa.me/919762627656?text="+encodeURIComponent(message);
+if(navigator.canShare && navigator.canShare({files:[file]})){
+navigator.share({
+title:"Payment Confirmation",
+text:message,
+files:[file]
+});
+}else{
+alert("Your phone does not support sharing photo and message together.");
+}
 
-window.open(url,"_blank");
 }
-}
+
+
+
 // PAYMENT FUNCTION
 function payNow(){
 const upi="9762627656-3@ybl";
