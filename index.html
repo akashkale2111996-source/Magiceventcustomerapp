@@ -418,7 +418,7 @@ function openAlbum(album){
 const backBtn = document.createElement("button");
 backBtn.innerHTML = "⬅ Back to Gallery";
 backBtn.className = "secondary";
-backBtn.style.cssText = "width:auto;margin:10px;padding:10px 18px;display:block";
+backBtn.style.cssText = "width:auto;margin:10px;padding:10px 18px;display:block;min-height:0";
 backBtn.onclick = () => {
   galleryCards.innerHTML = "";
   Object.keys(albumData).forEach(albumName => {
