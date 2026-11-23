@@ -466,7 +466,7 @@ const galleryBack = document.createElement("button");
 galleryBack.innerHTML = "← Back to Gallery";
 galleryBack.style.cssText = "width:auto;padding:6px 12px;font-size:14px;margin:8px 0;";
 galleryBack.onclick = () => {
-  location.reload();
+  go("gallery");
 };
 galleryCards.appendChild(galleryBack);
   Object.keys(albumData[album].subfolders).forEach(folderName => {
@@ -666,7 +666,7 @@ section.scrollIntoView({behavior:"smooth",block:"start"});
 document.querySelectorAll(".bottom-nav button").forEach(btn=>{
 btn.classList.remove("active");
 });
-
+go("gallery");
 const activeBtn=document.getElementById("nav-"+id);
 if(activeBtn)activeBtn.classList.add("active");
 }
