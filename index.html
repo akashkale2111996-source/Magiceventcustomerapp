@@ -462,7 +462,13 @@ wedding: {
 function openPhotographyFolders(album){
   const galleryCards = document.getElementById("galleryCards");
   galleryCards.innerHTML = "";
-
+const galleryBack = document.createElement("button");
+galleryBack.innerHTML = "← Back to Gallery";
+galleryBack.className = "secondary";
+galleryBack.onclick = () => {
+  location.reload();
+};
+galleryCards.appendChild(galleryBack);
   Object.keys(albumData[album].subfolders).forEach(folderName => {
     const folder = albumData[album].subfolders[folderName];
     const card = document.createElement("div");
