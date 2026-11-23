@@ -560,102 +560,333 @@ preview.classList.remove("hidden");
 preview.style.display="flex";
 }
 function openAlbum(album){
-  if(albumData[album].subfolders){
-    openPhotographyFolders(album);
-    return;
+// GALLERY ALBUMS
+const albumData = {
+  baby: {
+    title: "🤱 Baby Shower",
+    images: ["gallery1.jpg", "gallery2.jpg"]
+  },
+  ghana: {
+    title: "🌺 घाणा-बांगड्या कार्यक्रम",
+    images: ["gallery3.jpg", "gallery4.jpg", "gallery6.jpg"]
+  },
+  birthday: {
+    title: "🎂 Birthday",
+    images: ["gallery5.jpg", "gallery7.jpg"]
+  },
+  car: {
+    title: "🚗 Car Decoration",
+    images: ["gallery8.jpg", "gallery9.jpg", "gallery10.jpg"]
+  },
+  wedding: {
+    title: "💍 Wedding Planner",
+    images: ["gallery5.jpg"]
+  },
+  kitty: {
+    title: "🥳 Kitty Party",
+    images: ["gallery5.jpg"]
+  },
+  welcome: {
+    title: "👶 Baby Welcome",
+    images: ["gallery5.jpg"]
+  },
+  theme: {
+    title: "🎉 Theme Party",
+    images: ["gallery5.jpg"]
+  },
+  birthdayCelebration: {
+    title: "🎂 Birthday Celebration",
+    images: ["gallery5.jpg"]
+  },
+  nameCeremony: {
+    title: "👶 Name Ceremony",
+    images: ["gallery5.jpg"]
+  },
+  catering: {
+    title: "🍽️ Catering Services",
+    images: ["gallery5.jpg"]
+  },
+  corporate: {
+    title: "🏢 Corporate Events",
+    images: ["gallery5.jpg"]
+  },
+  anchors: {
+    title: "🎤 Anchors (Male/Female)",
+    images: ["gallery5.jpg"]
+  },
+  sound: {
+    title: "🔊 Sound System and Lights",
+    images: ["gallery5.jpg"]
+  },
+  mehendi: {
+    title: "🌿 Mehendi",
+    images: ["gallery5.jpg"]
+  },
+  photography: {
+    title: "📸 Photography",
+    images: ["gallery5.jpg"],
+    subfolders: {
+      birthday: {
+        title: "🎂 Birthday Photography",
+        images: ["gallery5.jpg", "gallery7.jpg"]
+      },
+      baby: {
+        title: "👶 Baby Shower Photography",
+        images: ["gallery1.jpg", "gallery2.jpg"]
+      },
+      name: {
+        title: "👑 Name Ceremony Photography",
+        images: ["gallery5.jpg"]
+      },
+      wedding: {
+        title: "💍 Wedding Photography",
+        images: ["gallery5.jpg"]
+      },
+      prewedding: {
+        title: "💑 Pre-Wedding Photography",
+        images: ["gallery5.jpg"]
+      }
+    }
+  },
+  makeup: {
+    title: "💄 Makeup",
+    images: ["gallery5.jpg"]
   }
-  const galleryCards = document.getElementById("galleryCards");
-  galleryCards.innerHTML = "";
-const backBtn = document.createElement("button");
-backBtn.innerHTML = "← Back to Gallery";
-backBtn.className = "secondary";
-backBtn.style.cssText = "width:max-content;height:auto;min-height:0;padding:10px 18px;margin:10px;";
-backBtn.onclick = () => {
-    galleryCards.innerHTML = "";
-    Object.keys(albumData).forEach(albumName => {
-        const folder = document.createElement("div");
-        folder.className = "card";
-        folder.innerHTML = `
-            <img src="${albumData[albumName].images[0]}"
-            style="width:100%;height:180px;object-fit:cover;border-radius:15px">
-            <div style="padding:10px;color:#7d365a;font-weight:bold">
-                ${albumData[albumName].title}
-            </div>
-        `;
-        folder.onclick = () => openAlbum(albumName);
-        galleryCards.appendChild(folder);
-    });
 };
-galleryCards.appendChild(backBtn);
-  albumData[album].images.forEach((photo,index)=>{
+
+// GALLERY STATE
+let currentAlbum = "";
+let currentFolder = "";
+let currentPhotoIndex = 0;
+let currentPhotoList = [];
+let currentPhotoTitle = "";
+let galleryView = "albums";
+
+const galleryCards = document.getElementById("galleryCards");
+
+// BACK BUTTON STYLE
+function makeGalleryBackButton(text, callback) {
+  const btn = document.createElement("button");
+  btn.textContent = text;
+  btn.className = "secondary";
+  btn.style.cssText =
+    "width:auto;padding:7px 12px;font-size:14px;" +
+    "min-height:0;margin:5px 0 12px;";
+  btn.onclick = function(e) {
+    e.stopPropagation();
+    callback();
+  };
+  return btn;
+}
+
+// MAIN ALBUM LIST
+function renderGalleryFolders() {
+  galleryView = "albums";
+  galleryCards.innerHTML = "";
+
+  Object.keys(albumData).forEach(album => {
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${photo}" loading="lazy"
-      style="width:100%;height:220px;object-fit:cover;border-radius:15px">
+      <img src="${albumData[album].images[0]}"
+      loading="lazy"
+      style="width:100%;height:180px;object-fit:cover;border-radius:15px">
 
-      <div style="padding:10px;color:#7d365a;font-weight:bold">
-        ${albumData[album].title} ${index+1}
+      <div style="padding:10px;font-weight:bold;color:#7d365a">
+        ${albumData[album].title}
       </div>
     `;
 
-    card.onclick = () => showPreview(album,index);
+    card.onclick = () => openAlbum(album);
     galleryCards.appendChild(card);
   });
+}
 
-  document.getElementById("gallery").scrollIntoView({
-    behavior:"smooth"
+// PHOTOGRAPHY FOLDERS
+function openPhotographyFolders(album) {
+  galleryView = "photographyFolders";
+  currentAlbum = album;
+  galleryCards.innerHTML = "";
+
+  galleryCards.appendChild(
+    makeGalleryBackButton("← Back to Gallery", renderGalleryFolders)
+  );
+
+  const folders = albumData[album].subfolders;
+
+  Object.keys(folders).forEach(folderName => {
+    const folder = folders[folderName];
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${folder.images[0]}"
+      loading="lazy"
+      style="width:100%;height:180px;object-fit:cover;border-radius:15px">
+
+      <div style="padding:10px;font-weight:bold;color:#7d365a">
+        ${folder.title}
+      </div>
+    `;
+
+    card.onclick = () => openPhotographyFolderPhotos(album, folderName);
+    galleryCards.appendChild(card);
   });
 }
-function closePreview(){
-const preview=document.getElementById("photoPreview");
-preview.style.display="none";
-preview.classList.add("hidden");
+
+// PHOTOGRAPHY FOLDER PHOTOS
+function openPhotographyFolderPhotos(album, folderName) {
+  galleryView = "photographyPhotos";
+  currentAlbum = album;
+  currentFolder = folderName;
+
+  const folder = albumData[album].subfolders[folderName];
+  currentPhotoList = folder.images;
+  currentPhotoTitle = folder.title;
+
+  galleryCards.innerHTML = "";
+
+  galleryCards.appendChild(
+    makeGalleryBackButton(
+      "← Back to Photography",
+      () => openPhotographyFolders(album)
+    )
+  );
+
+  folder.images.forEach((photo, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${photo}"
+      loading="lazy"
+      style="width:100%;height:220px;object-fit:cover;border-radius:15px">
+
+      <div style="padding:10px;color:#7d365a;font-weight:bold">
+        ${folder.title} ${index + 1}
+      </div>
+    `;
+
+    card.onclick = () => showPreviewFromList(index);
+    galleryCards.appendChild(card);
+  });
 }
 
-function bookThisPhoto(){
-const photo=albumData[currentAlbum].images[currentPhotoIndex];
-const album=albumData[currentAlbum].title;
+// NORMAL ALBUM PHOTOS
+function openAlbum(album) {
+  if (albumData[album].subfolders) {
+    openPhotographyFolders(album);
+    return;
+  }
 
-document.getElementById("galleryPhotoName").value=album;
-document.getElementById("galleryPhotoUrl").value=photo;
+  galleryView = "albumPhotos";
+  currentAlbum = album;
+  currentFolder = "";
+  currentPhotoList = albumData[album].images;
+  currentPhotoTitle = albumData[album].title;
 
-document.getElementById("selectedPhotoText").textContent=album;
-document.getElementById("selectedPhotoInfo").classList.remove("hidden");
+  galleryCards.innerHTML = "";
 
-const eventSelect=document.querySelector('[name="event"]');
+  galleryCards.appendChild(
+    makeGalleryBackButton("← Back to Gallery", renderGalleryFolders)
+  );
 
-if(currentAlbum==="birthday")eventSelect.value="Birthday Party";
-if(currentAlbum==="wedding")eventSelect.value="Wedding";
-if(currentAlbum==="baby")eventSelect.value="Baby Shower";
-if(currentAlbum==="stage")eventSelect.value="Theme Party";
-if(currentAlbum==="ghana") eventSelect.value="🌺 घाणा-बांगड्या कार्यक्रम";
-if(currentAlbum==="car") eventSelect.value="Car Decoration";
+  currentPhotoList.forEach((photo, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${photo}"
+      loading="lazy"
+      style="width:100%;height:220px;object-fit:cover;border-radius:15px">
+
+      <div style="padding:10px;color:#7d365a;font-weight:bold">
+        ${albumData[album].title} ${index + 1}
+      </div>
+    `;
+
+    card.onclick = () => showPreviewFromList(index);
+    galleryCards.appendChild(card);
+  });
+}
+
+// PHOTO PREVIEW
+function showPreviewFromList(index) {
+  currentPhotoIndex = index;
+
+  const photo = currentPhotoList[index];
+
+  document.getElementById("previewImage").src = photo;
+  document.getElementById("previewTitle").textContent = currentPhotoTitle;
+
+  const preview = document.getElementById("photoPreview");
+  preview.classList.remove("hidden");
+  preview.style.display = "flex";
+}
+
+function closePreview() {
+  const preview = document.getElementById("photoPreview");
+  preview.style.display = "none";
+  preview.classList.add("hidden");
+}
+
+// BOOK SELECTED PHOTO
+function bookThisPhoto() {
+  const photo = currentPhotoList[currentPhotoIndex];
+
+  document.getElementById("galleryPhotoName").value = currentPhotoTitle;
+  document.getElementById("galleryPhotoUrl").value = photo;
+
+  document.getElementById("selectedPhotoText").textContent = currentPhotoTitle;
+  document.getElementById("selectedPhotoInfo").classList.remove("hidden");
+
+  const eventSelect = document.querySelector('[name="event"]');
+
+  if (currentAlbum === "birthday") eventSelect.value = "Birthday Celebration";
+  if (currentAlbum === "wedding") eventSelect.value = "Wedding";
+  if (currentAlbum === "baby") eventSelect.value = "Baby Shower";
+  if (currentAlbum === "theme") eventSelect.value = "Theme Party";
+  if (currentAlbum === "ghana") eventSelect.value = "🌺 घाणा-बांगड्या कार्यक्रम";
+  if (currentAlbum === "car") eventSelect.value = "Car Decoration";
+
+  if (currentAlbum === "photography") {
+    if (currentFolder === "birthday") eventSelect.value = "Photography - Birthday";
+    if (currentFolder === "baby") eventSelect.value = "Photography - Baby Shower";
+    if (currentFolder === "name") eventSelect.value = "Photography - Name Ceremony";
+    if (currentFolder === "wedding") eventSelect.value = "Photography - Pre Wedding + Wedding";
+    if (currentFolder === "prewedding") eventSelect.value = "Photography - Pre Wedding";
+  }
+
   closePreview();
-go("booking");
+  go("booking");
 
-setTimeout(()=>{
-document.getElementById("bookingForm").scrollIntoView({
-behavior:"smooth",block:"start"
-});
-},400);
+  setTimeout(() => {
+    document.getElementById("bookingForm").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 400);
 }
 
-function shareGalleryPhoto(){
-const photo=albumData[currentAlbum].images[currentPhotoIndex];
+// SHARE PHOTO
+function shareGalleryPhoto() {
+  const photo = currentPhotoList[currentPhotoIndex];
 
-if(navigator.share){
-navigator.share({
-title:"Magic Events & Decorators",
-text:"Event decoration inspiration",
-url:photo
-}).catch(()=>{});
-}else{
-navigator.clipboard.writeText(photo);
-alert("Photo link copied!");
+  if (navigator.share) {
+    navigator.share({
+      title: "Magic Events & Decorators",
+      text: currentPhotoTitle,
+      url: photo
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(photo);
+    alert("Photo link copied!");
+  }
 }
-}
+
+// INITIAL GALLERY RENDER
+renderGalleryFolders();
   // NAVIGATION
 function go(id){
 const section=document.getElementById(id);
