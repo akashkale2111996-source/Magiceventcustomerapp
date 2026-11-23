@@ -419,26 +419,7 @@ wedding: {
     title: "🎤 Anchors (Male/Female)",
     images: ["gallery5.jpg"]
   },
-  photographyBirthday: {
-    title: "📸 Birthday Photography",
-    images: ["gallery5.jpg"]
-  },
-  photographyBabyShower: {
-    title: "📸 Baby Shower Photography",
-    images: ["gallery5.jpg"]
-  },
-  photographyName: {
-    title: "📸 Name Ceremony Photography",
-    images: ["gallery5.jpg"]
-  },
-  photographyPreWedding: {
-    title: "📸 Pre Wedding Photography",
-    images: ["gallery5.jpg"]
-  },
-  photographyWedding: {
-    title: "📸 Pre Wedding + Wedding Photography",
-    images: ["gallery5.jpg"]
-  },
+  
   sound: {
     title: "🔊 Sound System and Lights",
     images: ["gallery5.jpg"]
@@ -447,6 +428,32 @@ wedding: {
     title: "🌿 Mehendi",
     images: ["gallery5.jpg"]
   },
+  photography: {
+    title: "📸 Photography",
+    images: ["gallery5.jpg"],
+    subfolders: {
+        birthday: {
+            title: "🎂 Birthday Photography",
+            images: ["gallery5.jpg", "gallery7.jpg"]
+        },
+        baby: {
+            title: "👶 Baby Shower Photography",
+            images: ["gallery1.jpg", "gallery2.jpg"]
+        },
+        name: {
+            title: "👑 Name Ceremony Photography",
+            images: ["gallery5.jpg"]
+        },
+        wedding: {
+            title: "💍 Wedding Photography",
+            images: ["gallery5.jpg"]
+        },
+        prewedding: {
+            title: "💑 Pre-Wedding Photography",
+            images: ["gallery5.jpg"]
+        }
+    }
+},
   makeup: {
     title: "💄 Makeup",
     images: ["gallery5.jpg"]
@@ -494,27 +501,31 @@ preview.classList.remove("hidden");
 preview.style.display="flex";
 }
 function openAlbum(album){
+  if(albumData[album].subfolders){
+    openPhotographyFolders(album);
+    return;
+  }
   const galleryCards = document.getElementById("galleryCards");
   galleryCards.innerHTML = "";
 const backBtn = document.createElement("button");
-backBtn.innerHTML = "⬅ Back to Gallery";
+backBtn.innerHTML = "← Back to Gallery";
 backBtn.className = "secondary";
-backBtn.style.cssText = "width:max-content;height:auto;min-height:0;padding:10px 18px;margin:10px;display:block;grid-column:1/-1;justify-self:start;align-self:start;flex:none";
+backBtn.style.cssText = "width:max-content;height:auto;min-height:0;padding:10px 18px;margin:10px;";
 backBtn.onclick = () => {
-  galleryCards.innerHTML = "";
-  Object.keys(albumData).forEach(albumName => {
-    const folder = document.createElement("div");
-    folder.className = "card";
-    folder.innerHTML = `
-      <img src="${albumData[albumName].images[0]}"
-      style="width:100%;height:180px;object-fit:cover;border-radius:15px">
-      <div style="padding:10px;color:#7d365a;font-weight:bold">
-        ${albumData[albumName].title}
-      </div>
-    `;
-    folder.onclick = () => openAlbum(albumName);
-    galleryCards.appendChild(folder);
-  });
+    galleryCards.innerHTML = "";
+    Object.keys(albumData).forEach(albumName => {
+        const folder = document.createElement("div");
+        folder.className = "card";
+        folder.innerHTML = `
+            <img src="${albumData[albumName].images[0]}"
+            style="width:100%;height:180px;object-fit:cover;border-radius:15px">
+            <div style="padding:10px;color:#7d365a;font-weight:bold">
+                ${albumData[albumName].title}
+            </div>
+        `;
+        folder.onclick = () => openAlbum(albumName);
+        galleryCards.appendChild(folder);
+    });
 };
 galleryCards.appendChild(backBtn);
   albumData[album].images.forEach((photo,index)=>{
