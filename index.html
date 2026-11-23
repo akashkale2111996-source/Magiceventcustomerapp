@@ -464,7 +464,7 @@ function openPhotographyFolders(album){
   galleryCards.innerHTML = "";
 const galleryBack = document.createElement("button");
 galleryBack.innerHTML = "← Back to Gallery";
-galleryBack.className = "secondary";
+galleryBack.style.cssText = "width:auto;padding:6px 12px;font-size:14px;margin:8px 0;";
 galleryBack.onclick = () => {
   location.reload();
 };
@@ -489,7 +489,7 @@ galleryCards.appendChild(galleryBack);
       const backBtn = document.createElement("button");
       backBtn.innerHTML = "← Back to Photography";
       backBtn.className = "secondary";
-      backBtn.onclick = () => openAlbum(album);
+      backBtn.onclick = () => openPhotographyFolders(album);
       galleryCards.appendChild(backBtn);
 
       folder.images.forEach((photo,index) => {
