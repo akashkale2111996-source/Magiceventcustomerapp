@@ -166,6 +166,7 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
 <option>Kitty Party</option>
 <option>Corporate Event</option>
 <option>Theme Party</option>
+  <option>Car Decoration</option>
 <option>🌺 घाणा-बांगड्या कार्यक्रम</option>
   <option>Other</option>
 </select>
@@ -482,7 +483,8 @@ if(currentAlbum==="wedding")eventSelect.value="Wedding";
 if(currentAlbum==="baby")eventSelect.value="Baby Shower";
 if(currentAlbum==="stage")eventSelect.value="Theme Party";
 if(currentAlbum==="ghana") eventSelect.value="🌺 घाणा-बांगड्या कार्यक्रम";
-closePreview();
+if(currentAlbum==="car") eventSelect.value="Car Decoration";
+  closePreview();
 go("booking");
 
 setTimeout(()=>{
