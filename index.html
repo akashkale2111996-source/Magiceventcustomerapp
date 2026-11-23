@@ -555,10 +555,13 @@ function renderGalleryFolders(){
     });
     galleryCards.appendChild(card);
   });
+
+  go("gallery");
 }
 
 // Open album or photography folders
 function openAlbum(album){
+  go("gallery");
   currentAlbum=album;
   currentFolder="";
 
@@ -587,6 +590,7 @@ function openAlbum(album){
 
 // Photography subfolders
 function openPhotographyFolders(album){
+  go("gallery");
   currentAlbum=album;
   currentFolder="";
   galleryCards.innerHTML="";
@@ -608,6 +612,7 @@ function openPhotographyFolders(album){
 
 // Photography folder photos
 function openPhotographyFolderPhotos(album,folderName){
+  go("gallery");
   currentAlbum=album;
   currentFolder=folderName;
 
@@ -617,7 +622,9 @@ function openPhotographyFolderPhotos(album,folderName){
 
   galleryCards.innerHTML="";
   galleryCards.appendChild(
-    makeBackButton("← Back to Photography",()=>openPhotographyFolders(album))
+    makeBackButton("← Back to Photography",()=>{
+      openPhotographyFolders(album);
+    })
   );
 
   folder.images.forEach((photo,index)=>{
