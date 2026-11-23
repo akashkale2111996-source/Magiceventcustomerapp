@@ -563,8 +563,13 @@ message+="\n🖼 Gallery Photo: "+photoName;
 }
 
 if(photoUrl){
-message+="\n📷 Photo Link: "+photoUrl;
-}
+  const fullPhotoUrl = photoUrl.startsWith("http")
+    ? photoUrl
+    : "https://akashkale2111996-source.github.io/Magiceventcustomerapp/" + photoUrl;
+
+  message += "\n📷 Photo Link: " + fullPhotoUrl;
+  }
+
 
 message+="\n\nThank you!";
 
