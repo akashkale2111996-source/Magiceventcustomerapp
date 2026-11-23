@@ -459,7 +459,60 @@ wedding: {
     images: ["gallery5.jpg"]
   },
 };
+function openPhotographyFolders(album){
+  const galleryCards = document.getElementById("galleryCards");
+  galleryCards.innerHTML = "";
 
+  Object.keys(albumData[album].subfolders).forEach(folderName => {
+    const folder = albumData[album].subfolders[folderName];
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${folder.images[0]}"
+      style="width:100%;height:180px;object-fit:cover">
+
+      <div style="padding:10px;font-weight:bold;color:#7d365a">
+        ${folder.title}
+      </div>
+    `;
+
+    card.onclick = () => {
+      galleryCards.innerHTML = "";
+
+      const backBtn = document.createElement("button");
+      backBtn.innerHTML = "← Back to Photography";
+      backBtn.className = "secondary";
+      backBtn.onclick = () => openAlbum(album);
+      galleryCards.appendChild(backBtn);
+
+      folder.images.forEach((photo,index) => {
+        const photoCard = document.createElement("div");
+        photoCard.className = "card";
+
+        photoCard.innerHTML = `
+          <img src="${photo}"
+          style="width:100%;height:220px;object-fit:cover">
+          <div style="padding:10px;color:#7d365a;font-weight:bold">
+            ${folder.title} ${index+1}
+          </div>
+        `;
+
+        photoCard.onclick = () => {
+          document.getElementById("previewImage").src = photo;
+          document.getElementById("previewTitle").textContent = folder.title;
+          const preview = document.getElementById("photoPreview");
+          preview.classList.remove("hidden");
+          preview.style.display = "flex";
+        };
+
+        galleryCards.appendChild(photoCard);
+      });
+    };
+
+    galleryCards.appendChild(card);
+  });
+  }
 // BUILD GALLERY FOLDERS
 const galleryCards = document.getElementById("galleryCards");
 
