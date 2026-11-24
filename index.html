@@ -603,11 +603,15 @@ function openAlbum(album){
     const videoCard=document.createElement("div");
     videoCard.className="card";
     videoCard.innerHTML=`
-      <video controls playsinline preload="metadata"
-        style="width:100%;border-radius:12px">
-        <source src="${video}" type="video/mp4">
-      </video>
-      <div class="card-title">🎥 Baby Shower Video</div>
+  <video controls playsinline preload="metadata"
+    style="width:100%;max-width:280px;height:160px;object-fit:cover;border-radius:12px;display:block;margin:auto">
+    <source src="${video}" type="video/mp4">
+  </video>
+  <div class="card-title">🎥 Baby Shower Video</div>
+  <button onclick="go('booking');document.getElementById('eventSelect').value='Baby Shower';">
+    📅 Book Baby Shower
+  </button>
+`;
     `;
     galleryCards.appendChild(videoCard);
   });
