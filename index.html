@@ -600,23 +600,30 @@ function openAlbum(album){
     galleryCards.appendChild(card);
   });
 
-  (albumData[album].videos || []).forEach(video=>{
-    const videoCard=document.createElement("div");
-    videoCard.className="card";
-    videoCard.innerHTML=`
-  <video controls playsinline preload="metadata"
-    style="width:100%;max-width:280px;height:160px;object-fit:cover;border-radius:12px;display:block;margin:auto">
-    <source src="${video}" type="video/mp4">
-  </video>
-  <div class="card-title">🎥 Baby Shower Video</div>
-<button onclick="document.getElementById('galleryVideoUrl').value=SITE_BASE+video;go('booking');document.getElementById('eventSelect').value='Baby Shower';">
-  </button>
-`;
- 
-    galleryCards.appendChild(videoCard);
-  });
-}
+(albumData[album].videos || []).forEach(video=>{
+  const videoCard=document.createElement("div");
+  videoCard.className="card";
 
+  const videoUrl=video.startsWith("http")
+    ?video
+    :SITE_BASE+video;
+
+  videoCard.innerHTML=`
+    <video controls playsinline preload="metadata"
+      style="width:100%;height:200px;object-fit:contain;border-radius:12px">
+      <source src="${videoUrl}" type="video/mp4">
+    </video>
+
+    <div class="card-title">🎥 ${albumData[album].title} Video</div>
+
+    <button type="button" style="width:100%"
+      onclick="bookThisVideo('${videoUrl}','${album}')">
+      📅 Book This Video
+    </button>
+  `;
+
+  galleryCards.appendChild(videoCard);
+});
 // Photography subfolders
 function openPhotographyFolders(album){
   go("gallery");
@@ -692,6 +699,19 @@ function closePreview(){
 // BOOK SELECTED PHOTO
 // =====================================
 function bookThisPhoto(){
+function bookThisVideo(videoUrl,album){
+  document.getElementById("galleryPhotoName").value="";
+  document.getElementById("galleryPhotoUrl").value="";
+  document.getElementById("galleryVideoUrl").value=videoUrl;
+
+  document.getElementById("selectedPhotoInfo").classList.remove("hidden");
+  document.getElementById("selectedPhotoText").textContent="🎥 Video Booking";
+
+  document.getElementById("eventSelect").value=
+    albumData[album].event || "Other";
+
+  go("booking");
+}
   const photo=currentPhotoList[currentPhotoIndex];
   if(!photo)return;
 
