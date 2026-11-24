@@ -581,10 +581,11 @@ function openAlbum(album){
     return;
   }
 
-  currentPhotoList=albumData[album].images;
+  currentPhotoList=albumData[album].images || [];
   currentPhotoTitle=albumData[album].title;
 
   galleryCards.innerHTML="";
+
   galleryCards.appendChild(
     makeBackButton("← Back to Gallery",renderGalleryFolders)
   );
@@ -596,6 +597,19 @@ function openAlbum(album){
       ()=>showPreview(index)
     );
     galleryCards.appendChild(card);
+  });
+
+  (albumData[album].videos || []).forEach(video=>{
+    const videoCard=document.createElement("div");
+    videoCard.className="card";
+    videoCard.innerHTML=`
+      <video controls playsinline preload="metadata"
+        style="width:100%;border-radius:12px">
+        <source src="${video}" type="video/mp4">
+      </video>
+      <div class="card-title">🎥 Baby Shower Video</div>
+    `;
+    galleryCards.appendChild(videoCard);
   });
 }
 
