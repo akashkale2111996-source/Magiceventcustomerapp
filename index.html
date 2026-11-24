@@ -695,94 +695,71 @@ function closePreview(){
   preview.style.display="none";
   preview.classList.add("hidden");
 }
-
 // =====================================
 // BOOK SELECTED PHOTO
 // =====================================
 function bookThisPhoto(){
+  const photo=currentPhotoList[currentPhotoIndex];
+  if(!photo)return;
 
-  const photo = currentPhotoList[currentPhotoIndex];
-  if(!photo) return;
+  const photoUrl=photo.startsWith("http")
+    ?photo
+    :SITE_BASE+photo;
 
-  const photoUrl = photo.startsWith("http")
-    ? photo
-    : SITE_BASE + photo;
+  document.getElementById("galleryPhotoName").value=
+    currentPhotoTitle+" "+(currentPhotoIndex+1);
 
-  document.getElementById("galleryPhotoName").value =
-    currentPhotoTitle + " " + (currentPhotoIndex + 1);
+  document.getElementById("galleryPhotoUrl").value=photoUrl;
+  document.getElementById("galleryVideoUrl").value="";
 
-  document.getElementById("galleryPhotoUrl").value = photoUrl;
-
-  document.getElementById("galleryVideoUrl").value = "";
-
-  document.getElementById("selectedPhotoInfo").classList.remove("hidden");
-
-  document.getElementById("selectedPhotoText").textContent =
-    currentPhotoTitle + " " + (currentPhotoIndex + 1);
-
-  let eventValue = "Other";
-
-  if(currentAlbum === "photography"){
-    const folder =
-      albumData.photography.subfolders[currentFolder];
-
-    if(folder){
-      eventValue = folder.event;
-    }
-  }else{
-    eventValue = albumData[currentAlbum].event || "Other";
-  }
-
-  document.getElementById("eventSelect").value = eventValue;
-
-  closePreview();
-  go("booking");
-}
-
-
-// =====================================
-// BOOK SELECTED VIDEO
-// =====================================
-function bookThisVideo(videoUrl, album){
-
-  document.getElementById("galleryPhotoName").value = "";
-  document.getElementById("galleryPhotoUrl").value = "";
-
-  document.getElementById("galleryVideoUrl").value = videoUrl;
+  document.getElementById("selectedPhotoText").textContent=
+    currentPhotoTitle+" "+(currentPhotoIndex+1);
 
   document.getElementById("selectedPhotoInfo").classList.remove("hidden");
 
-  document.getElementById("selectedPhotoText").textContent =
-    "🎥 Video Booking";
-
-  document.getElementById("eventSelect").value =
-    albumData[album].event || "Other";
-
-  go("booking");
-}
   let eventValue="Other";
 
   if(currentAlbum==="photography"){
     const folder=albumData.photography.subfolders[currentFolder];
-    if(folder)eventValue=folder.event;
+    if(folder) eventValue=folder.event;
   }else{
     eventValue=albumData[currentAlbum].event||"Other";
   }
 
-  const eventSelect=document.getElementById("eventSelect");
-  eventSelect.value=eventValue;
+  document.getElementById("eventSelect").value=eventValue;
 
   closePreview();
   go("booking");
 }
 
+// =====================================
+// BOOK SELECTED VIDEO
+// =====================================
+function bookThisVideo(videoUrl,album){
+  document.getElementById("galleryPhotoName").value="";
+  document.getElementById("galleryPhotoUrl").value="";
+  document.getElementById("galleryVideoUrl").value=videoUrl;
+
+  document.getElementById("selectedPhotoInfo").classList.remove("hidden");
+  document.getElementById("selectedPhotoText").textContent="🎥 Video Booking";
+
+  document.getElementById("eventSelect").value=
+    albumData[album].event||"Other";
+
+  go("booking");
+}
+
+// =====================================
+// CLEAR SELECTED PHOTO / VIDEO
+// =====================================
 function clearSelectedPhoto(){
   document.getElementById("galleryPhotoName").value="";
   document.getElementById("galleryPhotoUrl").value="";
+  document.getElementById("galleryVideoUrl").value="";
+
   document.getElementById("selectedPhotoInfo").classList.add("hidden");
   document.getElementById("selectedPhotoText").textContent="";
-}
-
+  }
 // =====================================
 // SHARE GALLERY PHOTO
 // =====================================
