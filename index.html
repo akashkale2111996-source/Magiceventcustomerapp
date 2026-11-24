@@ -366,13 +366,14 @@ const services = [
   ["📸 Photography","photography"]
 ];
 
-const serviceCards=document.getElementById("serviceCards");
-serviceCards.innerHTML="";
-services.forEach(([title,album])=>{
-  const card=document.createElement("div");
-  card.className="card service";
-  card.textContent=title;
-  card.onclick=()=>{
+const serviceCards = document.getElementById("serviceCards");
+serviceCards.innerHTML = "";
+
+services.forEach(([title, album]) => {
+  const card = document.createElement("div");
+  card.className = "card service";
+  card.textContent = title;
+  card.onclick = () => {
     go("gallery");
     openAlbum(album);
   };
