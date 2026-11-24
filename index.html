@@ -219,7 +219,7 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
 
       <input type="hidden" name="galleryPhotoName" id="galleryPhotoName">
       <input type="hidden" name="galleryPhotoUrl" id="galleryPhotoUrl">
-
+<input type="hidden" name="galleryVideoUrl" id="galleryVideoUrl">
       <div id="selectedPhotoInfo" class="status hidden">
         <strong>Selected Gallery Photo:</strong>
         <span id="selectedPhotoText"></span>
@@ -609,8 +609,7 @@ function openAlbum(album){
     <source src="${video}" type="video/mp4">
   </video>
   <div class="card-title">🎥 Baby Shower Video</div>
-  <button onclick="go('booking');document.getElementById('eventSelect').value='Baby Shower';">
-    📅 Book Baby Shower
+<button onclick="document.getElementById('galleryVideoUrl').value=SITE_BASE+video;go('booking');document.getElementById('eventSelect').value='Baby Shower';">
   </button>
 `;
  
@@ -704,7 +703,7 @@ function bookThisPhoto(){
     currentPhotoTitle+" "+(currentPhotoIndex+1);
 
   document.getElementById("galleryPhotoUrl").value=photoUrl;
-
+document.getElementById("galleryVideoUrl").value="";
   document.getElementById("selectedPhotoText").textContent=
     currentPhotoTitle+" "+(currentPhotoIndex+1);
 
@@ -804,7 +803,7 @@ document.getElementById("bookingForm").addEventListener("submit",function(e){
   const details=data.get("details")||"Not mentioned";
   const photoName=data.get("galleryPhotoName")||"";
   const photoUrl=data.get("galleryPhotoUrl")||"";
-
+const videoUrl=data.get("galleryVideoUrl")||"";
   if(phone.length!==10 || !/^[0-9]+$/.test(phone)){
     alert("Please enter a valid 10-digit mobile number.");
     return;
@@ -828,7 +827,9 @@ document.getElementById("bookingForm").addEventListener("submit",function(e){
   if(photoUrl){
     message+="\n📷 Gallery Photo Link: "+photoUrl;
   }
-
+if(videoUrl){
+  message+="\n🎥 Video Link: "+videoUrl;
+}
   message+="\n\nThank you! 🙏";
 
   const whatsappURL=
