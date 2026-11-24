@@ -387,6 +387,7 @@ services.forEach(([title, album]) => {
 const albumData={
   baby:{
     title:"👶 Baby Shower",
+    cover:"gallery1.jpg",
     images:["gallery1.jpg","gallery2.jpg"],
     videos:["Baby_Shower_1_compressed.mp4"],
     event:"Baby Shower"
@@ -398,22 +399,26 @@ const albumData={
   },
   birthday:{
     title:"🎂 Birthday",
+    cover:"gallery5.jpg",
     images:["gallery5.jpg","gallery7.jpg"],
     event:"Birthday "
   },
   car:{
     title:"🚗 Car Decoration",
+    cover:"gallery8.jpg",
     images:["gallery8.jpg","gallery9.jpg","gallery10.jpg"],
     event:"Car Decoration"
   },
   wedding:{
     title:"💍 Wedding Planner",
+    cover:"gallery7.jpg",
     images:["gallery5.jpg"],
     event:"Wedding"
   },
   
   welcome:{
     title:"👶 Baby Welcome",
+    cover:"gallery2.jpg",
     images:["gallery5.jpg"],
     event:"Baby Welcome"
   },
@@ -421,31 +426,37 @@ const albumData={
   
   nameCeremony:{
     title:"👑 Name Ceremony",
+    cover:"gallery6.jpg",
     images:["gallery5.jpg"],
     event:"Name Ceremony"
   },
   brideWelcome:{
     title:"👰 Bride Welcome",
+    cover:"gallery4.jpg",
     images:["gallery5.jpg"],
     event:"Bride Welcome"
 },
 saptapadi:{
     title:"💐 सप्तपदी",
+  cover:"gallery3.jpg",
     images:["gallery5.jpg"],
     event:"सप्तपदी"
 },
 fogColdPyro:{
     title:"🎇 Fog Cold Pyro",
+  cover:"gallery6.jpg",
     images:["gallery5.jpg"],
     event:"Fog Cold Pyro"
 },
   catering:{
     title:"🍽 Catering Services",
+    cover:"gallery9.jpg",
     images:["gallery5.jpg"],
     event:"Catering Services"
   },
   corporate:{
     title:"🏢 Corporate Events",
+    cover:"gallery10.jpg",
     images:["gallery5.jpg"],
     event:"Corporate Events"
   },
@@ -465,17 +476,20 @@ fogColdPyro:{
     }
 },
   sound:{
-    title:"🔊 Sound System and Lights",
-    images:["gallery5.jpg"],
-    event:"Sound System and Lights"
-  },
+  title:"🔊 Sound System and Lights",
+  cover:"gallery10.jpg",
+  images:["gallery5.jpg"],
+  event:"Sound System and Lights"
+},
   mehendi:{
     title:"🌿 Mehendi artist",
+    cover:"gallery7.jpg",
     images:["gallery5.jpg"],
     event:"Mehendi artist"
   },
   makeup:{
     title:"💄 Makeup artist",
+    cover:"gallery4.jpg",
     images:["gallery5.jpg"],
     event:"Makeup artist"
   },
@@ -562,7 +576,7 @@ function renderGalleryFolders(){
 
   Object.keys(albumData).forEach(album=>{
     const data=albumData[album];
-    const card=createCard(data.title,data.images[0],()=>{
+    const card=createCard(data.title,data.cover||data.images[0],()=>{
       openAlbum(album);
     });
     galleryCards.appendChild(card);
