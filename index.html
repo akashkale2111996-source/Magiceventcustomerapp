@@ -859,6 +859,9 @@ function saveBookingRecord(record){
       <p>📍 ${b.location}</p>
       <p>💰 ${b.budget}</p>
       <p>📝 ${b.details}</p>
+      <button onclick="editBooking(${b.id})" class="secondary" style="width:100%;margin-top:8px;">
+✏️ Edit Booking
+</button>
       <button onclick="deleteBooking(${b.id})" class="secondary" style="width:100%;margin-top:10px;background:#b00020;color:white;">
 🗑️ Delete Booking
 </button>
@@ -875,6 +878,34 @@ function deleteBooking(id){
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   showSavedBookings();
 }
+  function editBooking(id){
+  let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
+  let booking=bookings.find(b=>b.id===id);
+
+  if(!booking) return;
+
+  let newName=prompt("Customer Name:",booking.name);
+  if(newName===null) return;
+
+  let newPhone=prompt("Mobile Number:",booking.phone);
+  if(newPhone===null) return;
+
+  let newEvent=prompt("Event:",booking.event);
+  if(newEvent===null) return;
+
+  let newDate=prompt("Event Date:",booking.date);
+  if(newDate===null) return;
+
+  booking.name=newName;
+  booking.phone=newPhone;
+  booking.event=newEvent;
+  booking.date=newDate;
+
+  localStorage.setItem("magicBookings",JSON.stringify(bookings));
+  showSavedBookings();
+
+  alert("Booking updated successfully!");
+  }
 // =====================================
 // WHATSAPP BOOKING
 // =====================================
