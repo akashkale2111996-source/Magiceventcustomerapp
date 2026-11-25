@@ -862,6 +862,8 @@ function saveBookingRecord(record){
     </div>
   `).join("");
   }
+showSavedBookings();
+
 // =====================================
 // WHATSAPP BOOKING
 // =====================================
@@ -910,7 +912,20 @@ if(videoUrl){
   message+="\n🎥 Video Link: "+videoUrl;
 }
   message+="\n\nThank you! 🙏";
+saveBookingRecord({
+  name:name,
+  phone:phone,
+  event:event,
+  date:date,
+  location:location,
+  budget:budget,
+  details:details,
+  photoName:photoName,
+  photoUrl:photoUrl,
+  videoUrl:videoUrl
+});
 
+showSavedBookings();
   const whatsappURL=
     "https://wa.me/"+WHATSAPP_NUMBER+
     "?text="+encodeURIComponent(message);
