@@ -74,7 +74,7 @@ input,select,textarea{
 }
 textarea{min-height:90px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.status{background:#f1e5ec;border-radius:10px;padding:10px;font-size:.9rem}
+<.status{background:#f1e5ec;border-radius:10px;padding:10px;font-size:.9rem}
 .hidden{display:none!important}
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;background:#fff;
@@ -257,6 +257,37 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
 </div>
 
 <!-- PAYMENT -->
+  <!-- EDIT BOOKING POPUP -->
+<div id="editBookingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;padding:20px;overflow:auto;">
+
+  <div style="background:white;padding:20px;border-radius:18px;max-width:500px;margin:40px auto;">
+
+    <h2 style="color:#7d365a;">✏️ Edit Booking</h2>
+
+    <input id="editName" placeholder="Customer Name" style="width:100%;padding:12px;margin:8px 0;">
+
+    <input id="editPhone" placeholder="Mobile Number" type="tel" style="width:100%;padding:12px;margin:8px 0;">
+
+    <input id="editEvent" placeholder="Event" style="width:100%;padding:12px;margin:8px 0;">
+
+    <input id="editDate" type="date" style="width:100%;padding:12px;margin:8px 0;">
+
+    <input id="editLocation" placeholder="Location" style="width:100%;padding:12px;margin:8px 0;">
+
+    <input id="editBudget" placeholder="Budget ₹" type="number" style="width:100%;padding:12px;margin:8px 0;">
+
+    <textarea id="editDetails" placeholder="Additional Details" style="width:100%;padding:12px;margin:8px 0;height:100px;"></textarea>
+
+    <button onclick="saveEditedBooking()" style="width:100%;padding:14px;background:#7d365a;color:white;border:0;border-radius:12px;margin-top:10px;">
+      💾 Save Changes
+    </button>
+
+    <button onclick="closeEditBooking()" style="width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;">
+      Cancel
+    </button>
+
+  </div>
+</div>
 <section id="payment">
   <div class="wrap">
     <h2>💰 Payment Options</h2>
@@ -880,31 +911,45 @@ function deleteBooking(id){
 }
   function editBooking(id){
   let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
-  let booking=bookings.find(b=>b.id===id);
+  let booking=bookings.find(b=>b.id==id);
 
-  if(!booking) return;
+  if(!booking)return;
 
-  let newName=prompt("Customer Name:",booking.name);
-  if(newName===null) return;
+  document.getElementById("editName").value=booking.name || "";
+  document.getElementById("editPhone").value=booking.phone || "";
+  document.getElementById("editEvent").value=booking.event || "";
+  document.getElementById("editDate").value=booking.date || "";
+  document.getElementById("editLocation").value=booking.location || "";
+  document.getElementById("editBudget").value=booking.budget || "";
+  document.getElementById("editDetails").value=booking.details || "";
 
-  let newPhone=prompt("Mobile Number:",booking.phone);
-  if(newPhone===null) return;
+  document.getElementById("editBookingModal").style.display="block";
+  window.currentEditBookingId=id;
+}
 
-  let newEvent=prompt("Event:",booking.event);
-  if(newEvent===null) return;
+function saveEditedBooking(){
+  let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
+  let booking=bookings.find(b=>b.id==window.currentEditBookingId);
 
-  let newDate=prompt("Event Date:",booking.date);
-  if(newDate===null) return;
+  if(!booking)return;
 
-  booking.name=newName;
-  booking.phone=newPhone;
-  booking.event=newEvent;
-  booking.date=newDate;
+  booking.name=document.getElementById("editName").value;
+  booking.phone=document.getElementById("editPhone").value;
+  booking.event=document.getElementById("editEvent").value;
+  booking.date=document.getElementById("editDate").value;
+  booking.location=document.getElementById("editLocation").value;
+  booking.budget=document.getElementById("editBudget").value;
+  booking.details=document.getElementById("editDetails").value;
 
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   showSavedBookings();
+  closeEditBooking();
 
   alert("Booking updated successfully!");
+}
+
+function closeEditBooking(){
+  document.getElementById("editBookingModal").style.display="none";
   }
 // =====================================
 // WHATSAPP BOOKING
