@@ -943,7 +943,7 @@ function saveEditedBooking(){
 
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   showSavedBookings();
-  const updateMessage =
+  let updateMessage =
 "✨ MAGIC EVENTS & DECORATORS ✨\n\n"+
 "📝 BOOKING UPDATED\n\n"+
 "👤 Name: "+booking.name+"\n"+
@@ -951,9 +951,22 @@ function saveEditedBooking(){
 "🎉 Event: "+booking.event+"\n"+
 "📅 Date: "+booking.date+"\n"+
 "📍 Location: "+booking.location+"\n"+
-"💰 Budget: "+booking.budget+"\n"+
-"📝 Details: "+booking.details+"\n\n"+
-"🙏 Thank you!";
+"💰 Budget: "+(booking.budget||"Not mentioned")+"\n"+
+"📝 Details: "+(booking.details||"Not mentioned")+"\n";
+
+if(booking.photoName){
+updateMessage+="\n🖼 Selected Photo: "+booking.photoName+"\n";
+}
+
+if(booking.photoUrl){
+updateMessage+="\n📷 Gallery Photo Link: "+booking.photoUrl+"\n";
+}
+
+if(booking.videoUrl){
+updateMessage+="\n🎥 Video Link: "+booking.videoUrl+"\n";
+}
+
+updateMessage+="\n🙏 Thank you!";
 
 const whatsappURL =
 "https://wa.me/"+WHATSAPP_NUMBER+
