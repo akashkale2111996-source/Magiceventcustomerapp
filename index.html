@@ -230,6 +230,10 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
 
       <button type="submit">Send Booking Enquiry on WhatsApp</button>
     </form>
+    <div id="savedBookings" class="card">
+  <h3>📋 Saved Bookings</h3>
+  <div id="bookingList"></div>
+    </div>
   </div>
 </section>
 
@@ -825,7 +829,39 @@ function go(id){
 function toggleLang(){
   alert("मराठी माहिती लवकरच उपलब्ध होईल 🙏");
 }
+// ========================================
+// BOOKING MANAGEMENT - SAVE RECORDS
+// ========================================
+function saveBookingRecord(record){
+  let bookings=JSON.parse(localStorage.getItem("magicBookings")||"[]");
+  record.id=Date.now();
+  record.createdAt=new Date().toLocaleString();
+  bookings.push(record);
+  localStorage.setItem("magicBookings",JSON.stringify(bookings));
+  }
+  function showSavedBookings(){
+  const bookings=JSON.parse(localStorage.getItem("magicBookings")||"[]");
+  const list=document.getElementById("bookingList");
 
+  if(!list)return;
+
+  if(bookings.length===0){
+    list.innerHTML="<p>No bookings saved yet.</p>";
+    return;
+  }
+
+  list.innerHTML=bookings.map((b,i)=>`
+    <div class="card">
+      <strong>${i+1}. ${b.name}</strong>
+      <p>📞 ${b.phone}</p>
+      <p>🎉 ${b.event}</p>
+      <p>📅 ${b.date}</p>
+      <p>📍 ${b.location}</p>
+      <p>💰 ${b.budget}</p>
+      <p>📝 ${b.details}</p>
+    </div>
+  `).join("");
+  }
 // =====================================
 // WHATSAPP BOOKING
 // =====================================
@@ -842,10 +878,12 @@ document.getElementById("bookingForm").addEventListener("submit",function(e){
   const location=data.get("location")||"Not mentioned";
   const budget=data.get("budget")||"Not mentioned";
   const details=data.get("details")||"Not mentioned";
+  
   const photoName=data.get("galleryPhotoName")||"";
   const photoUrl=data.get("galleryPhotoUrl")||"";
 const videoUrl=data.get("galleryVideoUrl")||"";
   if(phone.length!==10 || !/^[0-9]+$/.test(phone)){
+  
     alert("Please enter a valid 10-digit mobile number.");
     return;
   }
