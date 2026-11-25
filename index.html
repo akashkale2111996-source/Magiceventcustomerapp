@@ -919,8 +919,7 @@ function deleteBooking(id){
 }
   function editBooking(id){
   let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
-  let booking=bookings.find(b=>b.id==id);
-
+  let booking = bookings.find(b => String(b.id) === String(id));
 document.getElementById("editPhotoName").value=booking.photoName || "";
   document.getElementById("editPhotoUrl").value=booking.photoUrl || "";
   document.getElementById("editVideoUrl").value=booking.videoUrl || "";
