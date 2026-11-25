@@ -216,7 +216,11 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
       <label>Additional details
         <textarea name="details" placeholder="Decoration details, requirements, etc."></textarea>
       </label>
+<input id="editPhotoName" placeholder="Gallery Photo Name" style="width:100%;padding:12px;margin:8px 0;">
 
+<input id="editPhotoUrl" placeholder="Gallery Photo Link" style="width:100%;padding:12px;margin:8px 0;">
+
+<input id="editVideoUrl" placeholder="Gallery Video Link" style="width:100%;padding:12px;margin:8px 0;">
       <input type="hidden" name="galleryPhotoName" id="galleryPhotoName">
       <input type="hidden" name="galleryPhotoUrl" id="galleryPhotoUrl">
 <input type="hidden" name="galleryVideoUrl" id="galleryVideoUrl">
@@ -947,7 +951,9 @@ function saveEditedBooking(){
   booking.location=document.getElementById("editLocation").value;
   booking.budget=document.getElementById("editBudget").value;
   booking.details=document.getElementById("editDetails").value;
-
+booking.photoName=document.getElementById("editPhotoName").value;
+booking.photoUrl=document.getElementById("editPhotoUrl").value;
+booking.videoUrl=document.getElementById("editVideoUrl").value;
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   showSavedBookings();
   let updateMessage =
