@@ -277,7 +277,11 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}
     <input id="editBudget" placeholder="Budget ₹" type="number" style="width:100%;padding:12px;margin:8px 0;">
 
     <textarea id="editDetails" placeholder="Additional Details" style="width:100%;padding:12px;margin:8px 0;height:100px;"></textarea>
+<input id="editPhotoName" placeholder="Gallery Photo Name" style="width:100%;padding:12px;margin:8px 0;">
 
+<input id="editPhotoUrl" placeholder="Gallery Photo Link" style="width:100%;padding:12px;margin:8px 0;">
+
+<input id="editVideoUrl" placeholder="Gallery Video Link" style="width:100%;padding:12px;margin:8px 0;">
     <button onclick="saveEditedBooking()" style="width:100%;padding:14px;background:#7d365a;color:white;border:0;border-radius:12px;margin-top:10px;">
       💾 Save Changes
     </button>
@@ -922,8 +926,11 @@ function deleteBooking(id){
   document.getElementById("editLocation").value=booking.location || "";
   document.getElementById("editBudget").value=booking.budget || "";
   document.getElementById("editDetails").value=booking.details || "";
-
-  document.getElementById("editBookingModal").style.display="block";
+document.getElementById("editPhotoName").value=booking.photoName || "";
+document.getElementById("editPhotoUrl").value=booking.photoUrl || "";
+document.getElementById("editVideoUrl").value=booking.videoUrl || "booking.photoName=document.getElementById("editPhotoName").value;
+booking.photoUrl=document.getElementById("editPhotoUrl").value;
+booking.videoUrl=document.getElementById("editVideoUrl").value;t.getElementById("editBookingModal").style.display="block";
   window.currentEditBookingId=id;
 }
 
