@@ -927,7 +927,7 @@ document.getElementById("editPhotoName").value=booking.photoName || "";
 
   document.getElementById("editBookingModal").style.display="block";
   window.currentEditBookingId=id;
-
+  }
 function saveEditedBooking(){
   let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
   let booking=bookings.find(b=>b.id==window.currentEditBookingId);
@@ -1052,7 +1052,7 @@ showSavedBookings();
 
   window.open(whatsappURL,"_blank");
 });
-     }
+     
 // =====================================
 // PAYMENT SCREENSHOT SHARE
 // =====================================
