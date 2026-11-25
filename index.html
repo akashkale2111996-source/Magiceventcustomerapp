@@ -943,6 +943,23 @@ function saveEditedBooking(){
 
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   showSavedBookings();
+  const updateMessage =
+"✨ MAGIC EVENTS & DECORATORS ✨\n\n"+
+"📝 BOOKING UPDATED\n\n"+
+"👤 Name: "+booking.name+"\n"+
+"📱 Phone: "+booking.phone+"\n"+
+"🎉 Event: "+booking.event+"\n"+
+"📅 Date: "+booking.date+"\n"+
+"📍 Location: "+booking.location+"\n"+
+"💰 Budget: "+booking.budget+"\n"+
+"📝 Details: "+booking.details+"\n\n"+
+"🙏 Thank you!";
+
+const whatsappURL =
+"https://wa.me/"+WHATSAPP_NUMBER+
+"?text="+encodeURIComponent(updateMessage);
+
+window.open(whatsappURL,"_blank");
   closeEditBooking();
 
   alert("Booking updated successfully!");
