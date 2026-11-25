@@ -859,11 +859,22 @@ function saveBookingRecord(record){
       <p>📍 ${b.location}</p>
       <p>💰 ${b.budget}</p>
       <p>📝 ${b.details}</p>
+      <button onclick="deleteBooking(${b.id})" class="secondary" style="width:100%;margin-top:10px;background:#b00020;color:white;">
+🗑️ Delete Booking
+</button>
     </div>
   `).join("");
   }
 showSavedBookings();
+function deleteBooking(id){
+  if(!confirm("Delete this booking?")) return;
 
+  let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
+  bookings=bookings.filter(b=>b.id!==id);
+
+  localStorage.setItem("magicBookings",JSON.stringify(bookings));
+  showSavedBookings();
+}
 // =====================================
 // WHATSAPP BOOKING
 // =====================================
