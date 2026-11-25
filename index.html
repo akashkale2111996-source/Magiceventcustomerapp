@@ -900,12 +900,7 @@ function saveBookingRecord(record){
       <p>📞 ${b.phone}</p>
       <p>🎉 ${b.event}</p>
       <p>📌 Status: ${b.status || "Pending"}</p>
-      <select onchange="updateBookingStatus(${b.id},this.value)">
-  <option value="Pending" ${(b.status||"Pending")==="Pending"?"selected":""}>⏳ Pending</option>
-  <option value="Confirmed" ${b.status==="Confirmed"?"selected":""}>✅ Confirmed</option>
-  <option value="Completed" ${b.status==="Completed"?"selected":""}>🎉 Completed</option>
-  <option value="Cancelled" ${b.status==="Cancelled"?"selected":""}>❌ Cancelled</option>
-</select>
+      
       <p>📅 ${b.date}</p>
       <p>📍 ${b.location}</p>
       <p>💰 ${b.budget}</p>
