@@ -921,22 +921,12 @@ function deleteBooking(id){
   let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
   let booking=bookings.find(b=>b.id==id);
 
-  if(!booking)return;
-
-  document.getElementById("editName").value=booking.name || "";
-  document.getElementById("editPhone").value=booking.phone || "";
-  document.getElementById("editEvent").value=booking.event || "";
-  document.getElementById("editDate").value=booking.date || "";
-  document.getElementById("editLocation").value=booking.location || "";
-  document.getElementById("editBudget").value=booking.budget || "";
-  document.getElementById("editDetails").value=booking.details || "";
 document.getElementById("editPhotoName").value=booking.photoName || "";
-document.getElementById("editPhotoUrl").value=booking.photoUrl || "";
-document.getElementById("editVideoUrl").value=booking.videoUrl || "booking.photoName=document.getElementById("editPhotoName").value;
-booking.photoUrl=document.getElementById("editPhotoUrl").value;
-booking.videoUrl=document.getElementById("editVideoUrl").value;t.getElementById("editBookingModal").style.display="block";
+  document.getElementById("editPhotoUrl").value=booking.photoUrl || "";
+  document.getElementById("editVideoUrl").value=booking.videoUrl || "";
+
+  document.getElementById("editBookingModal").style.display="block";
   window.currentEditBookingId=id;
-}
 
 function saveEditedBooking(){
   let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
