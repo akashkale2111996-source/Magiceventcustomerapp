@@ -873,6 +873,16 @@ function saveBookingRecord(record){
   bookings.push(record);
   localStorage.setItem("magicBookings",JSON.stringify(bookings));
   }
+  function updateBookingStatus(id,status){
+  let bookings=JSON.parse(localStorage.getItem("magicBookings") || "[]");
+  let booking=bookings.find(b=>String(b.id)===String(id));
+
+  if(!booking)return;
+
+  booking.status=status;
+  localStorage.setItem("magicBookings",JSON.stringify(bookings));
+  showSavedBookings();
+  }
   function showSavedBookings(){
   const bookings=JSON.parse(localStorage.getItem("magicBookings")||"[]");
   const list=document.getElementById("bookingList");
@@ -889,6 +899,13 @@ function saveBookingRecord(record){
       <strong>${i+1}. ${b.name}</strong>
       <p>📞 ${b.phone}</p>
       <p>🎉 ${b.event}</p>
+      <p>📌 Status: ${b.status || "Pending"}</p>
+      <select onchange="updateBookingStatus(${b.id},this.value)">
+  <option value="Pending" ${(b.status||"Pending")==="Pending"?"selected":""}>⏳ Pending</option>
+  <option value="Confirmed" ${b.status==="Confirmed"?"selected":""}>✅ Confirmed</option>
+  <option value="Completed" ${b.status==="Completed"?"selected":""}>🎉 Completed</option>
+  <option value="Cancelled" ${b.status==="Cancelled"?"selected":""}>❌ Cancelled</option>
+</select>
       <p>📅 ${b.date}</p>
       <p>📍 ${b.location}</p>
       <p>💰 ${b.budget}</p>
@@ -938,7 +955,9 @@ function saveEditedBooking(){
   let booking=bookings.find(b=>b.id==window.currentEditBookingId);
 
   if(!booking)return;
-
+if(!booking.status){
+  booking.status="Pending";
+    }
   booking.name=document.getElementById("editName").value;
   booking.phone=document.getElementById("editPhone").value;
   booking.event=document.getElementById("editEvent").value;
