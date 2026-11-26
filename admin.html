@@ -274,13 +274,18 @@ card.querySelector(".paymentHistory").onclick=async()=>{
     loadBookings();
     const paymentHistory = data["Payment History"] || [];
 
-let historyText = "Payment History:\n\n";
+const totalPaid = paymentHistory.reduce((sum, p) => {
+  return sum + Number(p.amount || 0);
+}, 0);
+
+let historyText = "💰 TOTAL PAID: ₹" + totalPaid + "\n\n";
+historyText += "📋 PAYMENT HISTORY\n\n";
 
 paymentHistory.forEach((p, i) => {
-  historyText += `${i + 1}. ₹${p.amount}\n`;
-  historyText += `Date: ${p.date}\n`;
-  historyText += `Method: ${p.method}\n`;
-  historyText += `Note: ${p.note}\n\n`;
+  historyText += (i + 1) + ". ₹" + p.amount + "\n";
+  historyText += "📅 Date: " + p.date + "\n";
+  historyText += "💳 Method: " + p.method + "\n";
+  historyText += "📝 Note: " + p.note + "\n\n";
 });
 
 alert(historyText);
