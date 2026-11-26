@@ -145,6 +145,7 @@ async function loadBookings(){
         <button class="updateStatus">Update Status</button>
         <button class="editAmount">Edit Total Amount</button>
         <button class="editAdvance">Edit Advance Payment</button>
+        <button class="editDetails">Edit Booking Details</button>
       `;
 
       const select=card.querySelector(".status");
@@ -192,6 +193,33 @@ card.querySelector(".editAdvance").onclick=async()=>{
       "Remaining Amount":Number(total)-amount
     });
     alert("Advance updated successfully");
+    loadBookings();
+  }catch(e){
+    alert(e.message);
+  }
+};
+      card.querySelector(".editDetails").onclick=async()=>{
+  const newName=prompt("Enter Customer Name",name);
+  if(newName===null)return;
+
+  const newPhone=prompt("Enter Mobile Number",phone);
+  if(newPhone===null)return;
+
+  const newEvent=prompt("Enter Event Type",event);
+  if(newEvent===null)return;
+
+  const newLocation=prompt("Enter Event Location",location);
+  if(newLocation===null)return;
+
+  try{
+    await doc.ref.update({
+      "Customer name":newName,
+      "Customer phone":newPhone,
+      "Event type":newEvent,
+      "Event Address":newLocation
+    });
+
+    alert("Booking details updated successfully!");
     loadBookings();
   }catch(e){
     alert(e.message);
