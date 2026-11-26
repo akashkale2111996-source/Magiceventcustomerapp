@@ -144,6 +144,7 @@ async function loadBookings(){
 
         <button class="updateStatus">Update Status</button>
         <button class="editAmount">Edit Total Amount</button>
+        <button class="editAdvance">Edit Advance Payment</button>
       `;
 
       const select=card.querySelector(".status");
@@ -175,7 +176,27 @@ async function loadBookings(){
           alert(e.message);
         }
       };
+card.querySelector(".editAdvance").onclick=async()=>{
+  const newAdvance=prompt("Enter Advance Amount",advance);
+  if(newAdvance===null)return;
 
+  const amount=Number(newAdvance);
+  if(isNaN(amount)||amount<0||amount>Number(total)){
+    alert("Invalid advance amount");
+    return;
+  }
+
+  try{
+    await doc.ref.update({
+      "Advance Amount":amount,
+      "Remaining Amount":Number(total)-amount
+    });
+    alert("Advance updated successfully");
+    loadBookings();
+  }catch(e){
+    alert(e.message);
+  }
+};
       list.appendChild(card);
     });
 
