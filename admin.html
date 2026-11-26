@@ -226,74 +226,37 @@ card.querySelector(".editAdvance").onclick=async()=>{
     alert(e.message);
   }
 };
-card.querySelector(".paymentHistory").onclick=async()=>{
-  const payment=prompt("Enter Payment Amount");
-  if(payment===null)return;
-
-  const amount=Number(payment);
-  if(isNaN(amount)||amount<=0){
-    alert("Invalid payment amount");
-    return;
-  }
-
-  const method=prompt("Payment Method (Cash/UPI/Bank)","UPI");
-  if(method===null)return;
-
-  const note=prompt("Payment Note","Advance Payment");
-  if(note===null)return;
-
+  card.querySelector(".paymentHistory").onclick=async()=>{
   try{
     const fresh=await doc.ref.get();
     const data=fresh.data();
+    const paymentHistory=data["Payment History"]||[];
 
-    const total=Number(data["Total Amount"]||0);
-    const oldAdvance=Number(data["Advance Amount"]||0);
-    const newAdvance=oldAdvance+amount;
+    const totalPaid=paymentHistory.reduce((sum,p)=>{
+      return sum+Number(p.amount||0);
+    },0);
 
-    if(newAdvance>total){
-      alert("Payment exceeds remaining amount!");
-      return;
+    let historyText="💰 TOTAL PAID: ₹"+totalPaid+"\n\n";
+    historyText+="📋 PAYMENT HISTORY\n\n";
+
+    if(paymentHistory.length===0){
+      historyText+="No payment records found.";
+    }else{
+      paymentHistory.forEach((p,i)=>{
+        historyText+=(i+1)+". ₹"+p.amount+"\n";
+        historyText+="📅 Date: "+p.date+"\n";
+        historyText+="💳 Method: "+p.method+"\n";
+        historyText+="📝 Note: "+p.note+"\n\n";
+      });
     }
 
-    const history=data["Payment History"]||[];
-
-    history.push({
-      amount:amount,
-      date:new Date().toLocaleDateString("en-IN"),
-      method:method,
-      note:note
-    });
-
-    await doc.ref.update({
-      "Advance Amount":newAdvance,
-      "Remaining Amount":total-newAdvance,
-      "Payment History":history
-    });
-
-    alert("Payment saved successfully!");
-    loadBookings();
-    const paymentHistory = data["Payment History"] || [];
-
-const totalPaid = paymentHistory.reduce((sum, p) => {
-  return sum + Number(p.amount || 0);
-}, 0);
-
-let historyText = "💰 TOTAL PAID: ₹" + totalPaid + "\n\n";
-historyText += "📋 PAYMENT HISTORY\n\n";
-
-paymentHistory.forEach((p, i) => {
-  historyText += (i + 1) + ". ₹" + p.amount + "\n";
-  historyText += "📅 Date: " + p.date + "\n";
-  historyText += "💳 Method: " + p.method + "\n";
-  historyText += "📝 Note: " + p.note + "\n\n";
-});
-
-alert(historyText);
-
+    alert(historyText);
   }catch(e){
     alert(e.message);
   }
-};      
+};    
+
+    
       list.appendChild(card);
     });
 
