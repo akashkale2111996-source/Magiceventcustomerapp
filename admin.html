@@ -4,468 +4,141 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Magic Events Admin</title>
-
 <style>
-body{font-family:Arial;background:#fff7f8;color:#39252f;margin:0}
-header{background:#7d365a;color:white;padding:20px;text-align:center}
-.container{padding:15px}
-.card{background:white;border-radius:14px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #ddd}
-input,button,select{padding:12px;margin:6px 0;width:100%;box-sizing:border-box;border-radius:8px}
-button{background:#7d365a;color:white;border:0;font-weight:bold}
-.small{font-size:13px;color:#777}
-#dashboard{display:none}
+:root{--wine:#7d365a;--rose:#b45d82;--cream:#fff7f8;--ink:#39252f;--gold:#d6a64b}
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:var(--cream);color:var(--ink);margin:0}
+header{background:var(--wine);color:#fff;padding:20px;text-align:center}header h2{margin:0 0 8px}header p{margin:0}
+.container{padding:14px;max-width:900px;margin:auto}.card{background:white;border-radius:14px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #ddd;overflow-wrap:anywhere}
+input,button,select{padding:12px;margin:6px 0;width:100%;box-sizing:border-box;border-radius:8px;font-size:16px}input,select{border:1px solid #ddd;background:#fff;color:var(--ink)}button{background:var(--wine);color:white;border:0;font-weight:bold;cursor:pointer}button:active{opacity:.85}.small{font-size:13px;color:#777}#dashboard{display:none}
+.btn-secondary{background:#555}.btn-danger{background:#a83232}.btn-success{background:#287c45}.pending-card{background:#fff3cd;border:1px solid #ead68a}
 </style>
 </head>
 <body>
-
-<header>
-<h2>✨ MAGIC EVENTS ADMIN</h2>
-<p>Booking Management</p>
-</header>
-
+<header><h2>✨ MAGIC EVENTS ADMIN</h2><p>Booking Management</p></header>
 <div class="container">
-
-<div class="card" id="loginBox">
-<h3>Admin Login</h3>
-<input id="email" type="email" placeholder="Admin Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<p id="loginMsg"></p>
+  <div class="card" id="loginBox">
+    <h3>Admin Login</h3><input id="email" type="email" placeholder="Admin Email" autocomplete="username">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <button onclick="login()">Login</button><p id="loginMsg"></p>
+  </div>
+  <div id="dashboard">
+    <button onclick="loadBookings()">🔄 Refresh Bookings</button><button class="btn-secondary" onclick="logout()">Logout</button>
+    <div id="pendingPayments"></div><div id="bookingList"></div>
+  </div>
 </div>
-
-<div id="dashboard">
-<button onclick="loadBookings()">🔄 Refresh Bookings</button>
-<button onclick="logout()">Logout</button>
-<div id="bookingList"></div>
-  <div id="pendingPayments"></div>
-</div>
-
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
-  authDomain: "magiceventsadmin.firebaseapp.com",
-  projectId: "magiceventsadmin",
-  storageBucket: "magiceventsadmin.firebasestorage.app",
-  messagingSenderId: "129450507612",
-  appId: "1:129450507612:web:56ede0b1b409478e781599",
-  measurementId: "G-QVNH8B3WQR"
+const firebaseConfig={
+  apiKey:"AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
+  authDomain:"magiceventsadmin.firebaseapp.com",
+  projectId:"magiceventsadmin",
+  storageBucket:"magiceventsadmin.firebasestorage.app",
+  messagingSenderId:"129450507612",
+  appId:"1:129450507612:web:56ede0b1b409478e781599",
+  measurementId:"G-QVNH8B3WQR"
 };
-
 firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
+function money(value){return Number(value||0).toLocaleString("en-IN");}
 function login(){
-  const email=document.getElementById("email").value.trim();
-  const password=document.getElementById("password").value;
-
-  auth.signInWithEmailAndPassword(email,password)
-  .then(()=>{
-    showDashboard();
-  })
-  .catch(error=>{
-    document.getElementById("loginMsg").textContent=error.message;
-  });
+  const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+  document.getElementById("loginMsg").textContent="";
+  auth.signInWithEmailAndPassword(email,password).catch(error=>document.getElementById("loginMsg").textContent=error.message);
 }
-
-function logout(){
-  auth.signOut();
-}
-
+function logout(){auth.signOut();}
 auth.onAuthStateChanged(user=>{
-  if(user){
-    showDashboard();
-  }else{
-    document.getElementById("loginBox").style.display="block";
-    document.getElementById("dashboard").style.display="none";
-  }
+  document.getElementById("loginBox").style.display=user?"none":"block";
+  document.getElementById("dashboard").style.display=user?"block":"none";
+  if(user)showDashboard();
 });
+function showDashboard(){document.getElementById("loginBox").style.display="none";document.getElementById("dashboard").style.display="block";loadBookings();loadPendingPayments();}
 
-function showDashboard(){
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("dashboard").style.display="block";
-  loadBookings();
-  loadPendingPayments();
-}
 function showPaymentHistory(data){
+  const payments=data["Payment History"]||[];
+  const totalPaid=payments.reduce((sum,p)=>sum+Number(p.amount||0),0);
+  const overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;display:flex;justify-content:center;align-items:center;padding:15px;";
+  let html=`<div style="background:#fff7f8;width:100%;max-width:500px;max-height:85vh;overflow:auto;border-radius:20px;padding:20px;font-family:Arial;color:#39252f">
+  <h2 style="text-align:center;color:#7d365a">💰 Payment History</h2><div style="background:#7d365a;color:white;padding:18px;border-radius:15px;text-align:center;margin-bottom:15px"><div>TOTAL PAID</div><div style="font-size:28px;font-weight:bold">₹${money(totalPaid)}</div></div>`;
+  if(!payments.length)html+="<p>No payment records found.</p>";
+  else payments.forEach((p,i)=>{html+=`<div style="background:white;border:1px solid #ead5df;border-radius:14px;padding:14px;margin-bottom:12px"><div style="font-size:21px;font-weight:bold;color:#7d365a">${i+1}. ₹${money(p.amount)}</div><div style="margin-top:8px">📅 Date: ${esc(p.date||"-")}</div><div>💳 Method: ${esc(p.method||"-")}</div><div>📝 Note: ${esc(p.note||"-")}</div></div>`;});
+  html+=`<button class="closePaymentHistory" style="display:block;margin:15px auto 0;padding:12px 30px;background:#7d365a;color:white;border:none;border-radius:10px;font-size:16px">CLOSE</button></div>`;
+  overlay.innerHTML=html;document.body.appendChild(overlay);
+  overlay.querySelector(".closePaymentHistory").onclick=()=>overlay.remove();overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
+}
 
-  const payments = data["Payment History"] || [];
-
-  const totalPaid = payments.reduce((sum,p)=>{
-    return sum + Number(p.amount || 0);
-  },0);
-
-  const overlay = document.createElement("div");
-
-  overlay.style.cssText = `
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.65);
-    z-index:99999;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:15px;
-  `;
-
-  let html = `
-    <div style="
-      background:#fff7f8;
-      width:100%;
-      max-width:500px;
-      max-height:85vh;
-      overflow:auto;
-      border-radius:20px;
-      padding:20px;
-      font-family:Arial;
-      color:#39252f;
-    ">
-
-      <h2 style="text-align:center;color:#7d365a">
-        💰 Payment History
-      </h2>
-
-      <div style="
-        background:#7d365a;
-        color:white;
-        padding:18px;
-        border-radius:15px;
-        text-align:center;
-        margin-bottom:15px;
-      ">
-        <div>TOTAL PAID</div>
-        <div style="font-size:28px;font-weight:bold">
-          ₹${totalPaid}
-        </div>
-      </div>
-  `;
-
-  if(payments.length === 0){
-    html += `<p>No payment records found.</p>`;
-  }else{
-    payments.forEach((p,i)=>{
-      html += `
-        <div style="
-          background:white;
-          border:1px solid #ead5df;
-          border-radius:14px;
-          padding:14px;
-          margin-bottom:12px;
-        ">
-          <div style="font-size:21px;font-weight:bold;color:#7d365a">
-            ${i+1}. ₹${p.amount}
-          </div>
-          <div style="margin-top:8px">📅 Date: ${p.date || "-"}</div>
-          <div>💳 Method: ${p.method || "-"}</div>
-          <div>📝 Note: ${p.note || "-"}</div>
-        </div>
-      `;
-    });
-  }
-
-  html += `
-      <button class="closePaymentHistory" style="
-        display:block;
-        margin:15px auto 0;
-        padding:12px 30px;
-        background:#7d365a;
-        color:white;
-        border:none;
-        border-radius:10px;
-        font-size:16px;
-      ">CLOSE</button>
-    </div>
-  `;
-
-  overlay.innerHTML = html;
-
-  document.body.appendChild(overlay);
-
-  overlay.querySelector(".closePaymentHistory").onclick = ()=>{
-    overlay.remove();
-  };
-
-  overlay.onclick = (e)=>{
-    if(e.target === overlay){
-      overlay.remove();
+async function loadPendingPayments(){
+  const box=document.getElementById("pendingPayments");box.innerHTML="⏳ Loading pending payments...";
+  try{
+    const snapshot=await db.collection("PendingPayments").where("status","==","Pending").get();
+    if(snapshot.empty){box.innerHTML="<div class='card'><h3>💰 No Pending Payments</h3></div>";return;}
+    let html="<h2>💰 Pending Payments Approval</h2>";
+    snapshot.forEach(paymentDoc=>{const p=paymentDoc.data();html+=`<div class="card pending-card"><h3>₹${money(p.amount)}</h3><p>👤 Customer: ${esc(p.customerName||"-")}</p><p>📱 Mobile: ${esc(p.customerPhone||"-")}</p><p>📅 Date: ${esc(p.date||"-")}</p><p>💳 Method: ${esc(p.method||"-")}</p><p>📝 Note: ${esc(p.note||"-")}</p><button class="btn-success" onclick="confirmPayment('${paymentDoc.id}')">✅ Confirm Payment</button><button class="btn-danger" onclick="rejectPayment('${paymentDoc.id}')">❌ Reject</button></div>`;});
+    box.innerHTML=html;
+  }catch(error){box.innerHTML="<div class='card'>Error loading payments: "+esc(error.message)+"</div>";}
+}
+async function confirmPayment(paymentId){
+  if(!confirm("Confirm this payment? It will be added to the matching booking if found."))return;
+  try{
+    const paymentRef=db.collection("PendingPayments").doc(paymentId),paymentSnap=await paymentRef.get();
+    if(!paymentSnap.exists){alert("Payment record not found.");return;}
+    const p=paymentSnap.data();if(p.status!=="Pending"){alert("This payment is already processed.");loadPendingPayments();return;}
+    const amount=Number(p.amount||0);if(!Number.isFinite(amount)||amount<=0){alert("Invalid payment amount.");return;}
+    const phone=String(p.customerPhone||"").trim();let bookingDoc=null;
+    if(phone){
+      let bookings=await db.collection("Bookings").where("Customer phone","==",phone).get();
+      if(bookings.empty)bookings=await db.collection("Bookings").where("phone","==",phone).get();
+      if(!bookings.empty)bookingDoc=bookings.docs[0];
     }
-  };
-  }
-  async function loadPendingPayments(){
-    const box = document.getElementById("pendingPayments");
-    box.innerHTML = "⏳ Loading pending payments...";
-
-    try {
-        const snapshot = await db.collection("PendingPayments")
-            .where("status", "==", "Pending")
-            .get();
-
-        if(snapshot.empty){
-            box.innerHTML = "<h3>💰 No Pending Payments</h3>";
-            return;
-        }
-
-        let html = "<h2>💰 Pending Payments Approval</h2>";
-
-        snapshot.forEach(doc=>{
-            const p = doc.data();
-
-            html += `
-                <div class="card" style="background:#fff3cd;padding:15px;margin:12px 0;border-radius:12px;">
-                    <h3>₹${p.amount}</h3>
-                    <p>👤 Customer: ${p.customerName || "-"}</p>
-                    <p>📱 Mobile: ${p.customerPhone || "-"}</p>
-                    <p>📅 Date: ${p.date || "-"}</p>
-                    <p>💳 Method: ${p.method || "-"}</p>
-                    <p>📝 Note: ${p.note || "-"}</p>
-
-                    <button onclick="confirmPayment('${doc.id}')">
-                    ✅ Confirm Payment
-                    </button>
-
-                    <button onclick="rejectPayment('${doc.id}')">
-                    ❌ Reject
-                    </button>
-                </div>
-            `;
-        });
-
-        box.innerHTML = html;
-
-    }catch(error){
-        box.innerHTML = "Error loading payments: " + error.message;
+    if(bookingDoc){
+      const bookingData=bookingDoc.data(),total=Number(bookingData["Total Amount"]||0),oldAdvance=Number(bookingData["Advance Amount"]||0),newAdvance=oldAdvance+amount;
+      if(newAdvance>total){alert("This payment would exceed the booking total. Please check the booking amount first.");return;}
+      const history=Array.isArray(bookingData["Payment History"])?bookingData["Payment History"]:[];
+      history.push({amount,date:p.date||new Date().toLocaleDateString("en-IN"),method:p.method||"-",note:p.note||"Customer payment",source:"PendingPaymentApproval"});
+      await bookingDoc.ref.update({"Advance Amount":newAdvance,"Remaining Amount":total-newAdvance,"Payment History":history});
     }
-  }
+    await paymentRef.update({status:"Confirmed",confirmedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    alert(bookingDoc?"Payment confirmed and added to booking!":"Payment confirmed. No matching booking was found, so it was not added to a booking.");
+    loadBookings();loadPendingPayments();
+  }catch(error){alert("Could not confirm payment: "+error.message);}
+}
+async function rejectPayment(paymentId){
+  const reason=prompt("Reason for rejecting (optional):","Payment verification failed");if(reason===null)return;
+  try{await db.collection("PendingPayments").doc(paymentId).update({status:"Rejected",rejectionReason:reason,rejectedAt:firebase.firestore.FieldValue.serverTimestamp()});alert("Payment rejected.");loadPendingPayments();}
+  catch(error){alert("Could not reject payment: "+error.message);}
+}
 async function loadBookings(){
-  const list=document.getElementById("bookingList");
-  list.innerHTML="Loading bookings...";
-
+  const list=document.getElementById("bookingList");list.innerHTML="Loading bookings...";
   try{
     const snapshot=await db.collection("Bookings").get();
-
-    if(snapshot.empty){
-      list.innerHTML="<div class='card'>No bookings found.</div>";
-      return;
-    }
-
+    if(snapshot.empty){list.innerHTML="<div class='card'>No bookings found.</div>";return;}
     list.innerHTML="";
-
     snapshot.forEach(doc=>{
-      const b=doc.data();
-
-      const name=b["Customer name"]||b.customerName||"Not available";
-      const phone=b["Customer phone"]||b.phone||"";
-      const event=b["Event type"]||b.event||"";
-      const date=b["Event Date"]||b.date||"";
-      const location=b["Event Address"]||b.location||"";
-      const total=b["Total Amount"]||0;
-      const advance=b["Advance Amount"]||0;
-      const remaining=b["Remaining Amount"]||0;
-      const status=b["Booking Status"]||b.Status||"Pending";
-
-      const card=document.createElement("div");
-      card.className="card";
-
-      card.innerHTML=`
-        <h3>👤 ${name}</h3>
-        <p>📱 ${phone}</p>
-        <p>🎉 Event: ${event}</p>
-        <p>📅 Date: ${date}</p>
-        <p>📍 Location: ${location}</p>
-        <p>💰 Total: ₹${total}</p>
-        <p>💵 Advance: ₹${advance}</p>
-        <p>🧾 Remaining: ₹${remaining}</p>
-        
-
-        <label>Booking Status</label>
-        <select class="status">
-          <option>Pending</option>
-          <option>Confirmed</option>
-          <option>Completed</option>
-          <option>Cancelled</option>
-        </select>
-
-        <button class="updateStatus">Update Status</button>
-        <button class="editAmount">Edit Total Amount</button>
-        <button class="editAdvance">Edit Advance Payment</button>
-        <button class="editDetails">Edit Booking Details</button>
-        <button class="addPayment">➕ Add Payment</button>
-        <button class="paymentHistory">Payment History</button>
-      `;
-
-      const select=card.querySelector(".status");
-      select.value=status;
-
-      card.querySelector(".updateStatus").onclick=async()=>{
-        try{
-          await doc.ref.update({"Booking Status":select.value});
-          alert("Booking status updated!");
-          loadBookings();
-        }catch(e){
-          alert(e.message);
-        }
+      const b=doc.data(),name=b["Customer name"]||b.customerName||"Not available",phone=b["Customer phone"]||b.phone||"",event=b["Event type"]||b.event||"",date=b["Event Date"]||b.date||"",location=b["Event Address"]||b.location||"",total=Number(b["Total Amount"]||0),advance=Number(b["Advance Amount"]||0),remaining=Number(b["Remaining Amount"]??(total-advance)),status=b["Booking Status"]||b.Status||"Pending";
+      const card=document.createElement("div");card.className="card";
+      card.innerHTML=`<h3>👤 ${esc(name)}</h3><p>📱 ${esc(phone)}</p><p>🎉 Event: ${esc(event)}</p><p>📅 Date: ${esc(date)}</p><p>📍 Location: ${esc(location)}</p><p>💰 Total: ₹${money(total)}</p><p>💵 Advance/Paid: ₹${money(advance)}</p><p>🧾 Remaining: ₹${money(remaining)}</p><label>Booking Status</label><select class="status"><option>Pending</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select><button class="updateStatus">Update Status</button><button class="editAmount">Edit Total Amount</button><button class="editAdvance">Edit Advance/Paid Amount</button><button class="editDetails">Edit Booking Details</button><button class="addPayment">➕ Add Payment</button><button class="paymentHistory">Payment History</button>`;
+      const select=card.querySelector(".status");select.value=status;
+      card.querySelector(".updateStatus").onclick=async()=>{try{await doc.ref.update({"Booking Status":select.value});alert("Booking status updated!");loadBookings();}catch(e){alert(e.message);}};
+      card.querySelector(".editAmount").onclick=async()=>{const input=prompt("Enter Total Amount",total);if(input===null)return;const amount=Number(input);if(!Number.isFinite(amount)||amount<advance){alert("Total must be a valid amount and cannot be less than paid amount.");return;}try{await doc.ref.update({"Total Amount":amount,"Remaining Amount":amount-advance});alert("Total amount updated!");loadBookings();}catch(e){alert(e.message);}};
+      card.querySelector(".editAdvance").onclick=async()=>{const input=prompt("Enter Paid/Advance Amount",advance);if(input===null)return;const amount=Number(input);if(!Number.isFinite(amount)||amount<0||amount>total){alert("Invalid paid amount.");return;}try{await doc.ref.update({"Advance Amount":amount,"Remaining Amount":total-amount});alert("Paid amount updated!");loadBookings();}catch(e){alert(e.message);}};
+      card.querySelector(".editDetails").onclick=async()=>{const newName=prompt("Enter Customer Name",name);if(newName===null)return;const newPhone=prompt("Enter Mobile Number",phone);if(newPhone===null)return;const newEvent=prompt("Enter Event Type",event);if(newEvent===null)return;const newLocation=prompt("Enter Event Location",location);if(newLocation===null)return;try{await doc.ref.update({"Customer name":newName,"Customer phone":newPhone,"Event type":newEvent,"Event Address":newLocation});alert("Booking details updated successfully!");loadBookings();}catch(e){alert(e.message);}};
+      card.querySelector(".paymentHistory").onclick=async()=>{try{const fresh=await doc.ref.get();showPaymentHistory(fresh.data()||{});}catch(e){alert(e.message);}};
+      card.querySelector(".addPayment").onclick=async()=>{
+        const input=prompt("Enter Payment Amount");if(input===null)return;const amount=Number(input);if(!Number.isFinite(amount)||amount<=0){alert("Invalid payment amount");return;}
+        const method=prompt("Payment Method (Cash/UPI/Bank)","UPI");if(method===null)return;const note=prompt("Payment Note","Payment");if(note===null)return;
+        try{const fresh=await doc.ref.get(),data=fresh.data()||{},freshTotal=Number(data["Total Amount"]||0),oldPaid=Number(data["Advance Amount"]||0),newPaid=oldPaid+amount;if(newPaid>freshTotal){alert("Payment exceeds remaining amount!");return;}
+          const history=Array.isArray(data["Payment History"])?data["Payment History"]:[];history.push({amount,date:new Date().toLocaleDateString("en-IN"),method,note});
+          await doc.ref.update({"Advance Amount":newPaid,"Remaining Amount":freshTotal-newPaid,"Payment History":history});alert("Payment saved successfully!");loadBookings();
+        }catch(e){alert(e.message);}
       };
-
-      card.querySelector(".editAmount").onclick=async()=>{
-        const newAmount=prompt("Enter Total Amount",total);
-        if(newAmount===null)return;
-
-        try{
-          const amount=Number(newAmount);
-          await doc.ref.update({
-            "Total Amount":amount,
-            "Remaining Amount":amount-Number(advance)
-          });
-          alert("Amount updated!");
-          loadBookings();
-        }catch(e){
-          alert(e.message);
-        }
-      };
-card.querySelector(".editAdvance").onclick=async()=>{
-  const newAdvance=prompt("Enter Advance Amount",advance);
-  if(newAdvance===null)return;
-
-  const amount=Number(newAdvance);
-  if(isNaN(amount)||amount<0||amount>Number(total)){
-    alert("Invalid advance amount");
-    return;
-  }
-
-  try{
-    await doc.ref.update({
-      "Advance Amount":amount,
-      "Remaining Amount":Number(total)-amount
-    });
-    alert("Advance updated successfully");
-    loadBookings();
-  }catch(e){
-    alert(e.message);
-  }
-};
-      card.querySelector(".editDetails").onclick=async()=>{
-  const newName=prompt("Enter Customer Name",name);
-  if(newName===null)return;
-
-  const newPhone=prompt("Enter Mobile Number",phone);
-  if(newPhone===null)return;
-
-  const newEvent=prompt("Enter Event Type",event);
-  if(newEvent===null)return;
-
-  const newLocation=prompt("Enter Event Location",location);
-  if(newLocation===null)return;
-
-  try{
-    await doc.ref.update({
-      "Customer name":newName,
-      "Customer phone":newPhone,
-      "Event type":newEvent,
-      "Event Address":newLocation
-    });
-
-    alert("Booking details updated successfully!");
-    loadBookings();
-  }catch(e){
-    alert(e.message);
-  }
-};
-  card.querySelector(".paymentHistory").onclick=async()=>{
-  try{
-    const fresh=await doc.ref.get();
-    const data=fresh.data();
-    const paymentHistory=data["Payment History"]||[];
-
-    const totalPaid=paymentHistory.reduce((sum,p)=>{
-      return sum+Number(p.amount||0);
-    },0);
-
-    let historyText="💰 TOTAL PAID: ₹"+totalPaid+"\n\n";
-    historyText+="📋 PAYMENT HISTORY\n\n";
-
-    if(paymentHistory.length===0){
-      historyText+="No payment records found.";
-    }else{
-      paymentHistory.forEach((p,i)=>{
-        historyText+=(i+1)+". ₹"+p.amount+"\n";
-        historyText+="📅 Date: "+p.date+"\n";
-        historyText+="💳 Method: "+p.method+"\n";
-        historyText+="📝 Note: "+p.note+"\n\n";
-      });
-    }
-
-    showPaymentHistory(data);
-  }catch(e){
-    alert(e.message);
-  }
-};    
-card.querySelector(".addPayment").onclick=async()=>{
-  const payment=prompt("Enter Payment Amount");
-  if(payment===null)return;
-
-  const amount=Number(payment);
-  if(isNaN(amount)||amount<=0){
-    alert("Invalid payment amount");
-    return;
-  }
-
-  const method=prompt("Payment Method (Cash/UPI/Bank)","UPI");
-  if(method===null)return;
-
-  const note=prompt("Payment Note","Advance Payment");
-  if(note===null)return;
-
-  try{
-    const fresh=await doc.ref.get();
-    const data=fresh.data();
-
-    const total=Number(data["Total Amount"]||0);
-    const oldAdvance=Number(data["Advance Amount"]||0);
-    const newAdvance=oldAdvance+amount;
-
-    if(newAdvance>total){
-      alert("Payment exceeds remaining amount!");
-      return;
-    }
-
-    const history=data["Payment History"]||[];
-
-    history.push({
-      amount:amount,
-      date:new Date().toLocaleDateString("en-IN"),
-      method:method,
-      note:note
-    });
-
-    await doc.ref.update({
-      "Advance Amount":newAdvance,
-      "Remaining Amount":total-newAdvance,
-      "Payment History":history
-    });
-
-    alert("Payment saved successfully!");
-    loadBookings();
-
-  }catch(e){
-    alert(e.message);
-  }
-};
-    
       list.appendChild(card);
     });
-
-  }catch(error){
-    list.innerHTML="Error: "+error.message;
-  }
+  }catch(error){list.innerHTML="Error loading bookings: "+esc(error.message);}
 }
 </script>
-
 </body>
 </html>
