@@ -37,6 +37,7 @@ button{background:#7d365a;color:white;border:0;font-weight:bold}
 <button onclick="loadBookings()">🔄 Refresh Bookings</button>
 <button onclick="logout()">Logout</button>
 <div id="bookingList"></div>
+  <div id="pendingPayments"></div>
 </div>
 
 </div>
@@ -91,6 +92,7 @@ function showDashboard(){
   document.getElementById("loginBox").style.display="none";
   document.getElementById("dashboard").style.display="block";
   loadBookings();
+  loadPendingPayments();
 }
 function showPaymentHistory(data){
 
@@ -195,6 +197,51 @@ function showPaymentHistory(data){
       overlay.remove();
     }
   };
+  }
+  async function loadPendingPayments(){
+    const box = document.getElementById("pendingPayments");
+    box.innerHTML = "⏳ Loading pending payments...";
+
+    try {
+        const snapshot = await db.collection("PendingPayments")
+            .where("status", "==", "Pending")
+            .get();
+
+        if(snapshot.empty){
+            box.innerHTML = "<h3>💰 No Pending Payments</h3>";
+            return;
+        }
+
+        let html = "<h2>💰 Pending Payments Approval</h2>";
+
+        snapshot.forEach(doc=>{
+            const p = doc.data();
+
+            html += `
+                <div class="card" style="background:#fff3cd;padding:15px;margin:12px 0;border-radius:12px;">
+                    <h3>₹${p.amount}</h3>
+                    <p>👤 Customer: ${p.customerName || "-"}</p>
+                    <p>📱 Mobile: ${p.customerPhone || "-"}</p>
+                    <p>📅 Date: ${p.date || "-"}</p>
+                    <p>💳 Method: ${p.method || "-"}</p>
+                    <p>📝 Note: ${p.note || "-"}</p>
+
+                    <button onclick="confirmPayment('${doc.id}')">
+                    ✅ Confirm Payment
+                    </button>
+
+                    <button onclick="rejectPayment('${doc.id}')">
+                    ❌ Reject
+                    </button>
+                </div>
+            `;
+        });
+
+        box.innerHTML = html;
+
+    }catch(error){
+        box.innerHTML = "Error loading payments: " + error.message;
+    }
   }
 async function loadBookings(){
   const list=document.getElementById("bookingList");
