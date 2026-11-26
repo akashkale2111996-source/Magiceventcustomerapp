@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magic Events Admin</title>
+
+<style>
+body{font-family:Arial;background:#fff7f8;color:#39252f;margin:0}
+header{background:#7d365a;color:white;padding:20px;text-align:center}
+.container{padding:15px}
+.card{background:white;border-radius:14px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #ddd}
+input,button,select{padding:12px;margin:6px 0;width:100%;box-sizing:border-box;border-radius:8px}
+button{background:#7d365a;color:white;border:0;font-weight:bold}
+.small{font-size:13px;color:#777}
+#dashboard{display:none}
+</style>
+</head>
+<body>
+
+<header>
+<h2>✨ MAGIC EVENTS ADMIN</h2>
+<p>Booking Management</p>
+</header>
+
+<div class="container">
+
+<div class="card" id="loginBox">
+<h3>Admin Login</h3>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</div>
+
+<div id="dashboard">
+<button onclick="loadBookings()">🔄 Refresh Bookings</button>
+<button onclick="logout()">Logout</button>
+<div id="bookingList"></div>
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
+  authDomain: "magiceventsadmin.firebaseapp.com",
+  projectId: "magiceventsadmin",
+  storageBucket: "magiceventsadmin.firebasestorage.app",
+  messagingSenderId: "129450507612",
+  appId: "1:129450507612:web:56ede0b1b409478e781599",
+  measurementId: "G-QVNH8B3WQR"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+function login(){
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email,password)
+  .then(()=>{
+    showDashboard();
+  })
+  .catch(error=>{
+    document.getElementById("loginMsg").textContent=error.message;
+  });
+}
+
+function logout(){
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user=>{
+  if(user){
+    showDashboard();
+  }else{
+    document.getElementById("loginBox").style.display="block";
+    document.getElementById("dashboard").style.display="none";
+  }
+});
+
+function showDashboard(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  loadBookings();
+}
+
+async function loadBookings(){
+  const list=document.getElementById("bookingList");
+  list.innerHTML="Loading bookings...";
+
+  try{
+    const snapshot=await db.collection("Bookings").get();
+
+    if(snapshot.empty){
+      list.innerHTML="<div class='card'>No bookings found.</div>";
+      return;
+    }
+
+    list.innerHTML="";
+
+    snapshot.forEach(doc=>{
+      const b=doc.data();
+
+      const name=b["Customer name"]||b.customerName||"Not available";
+      const phone=b["Customer phone"]||b.phone||"";
+      const event=b["Event type"]||b.event||"";
+      const date=b["Event Date"]||b.date||"";
+      const location=b["Event Address"]||b.location||"";
+      const total=b["Total Amount"]||0;
+      const advance=b["Advance Amount"]||0;
+      const remaining=b["Remaining Amount"]||0;
+      const status=b["Booking Status"]||b.Status||"Pending";
+
+      const card=document.createElement("div");
+      card.className="card";
+
+      card.innerHTML=`
+        <h3>👤 ${name}</h3>
+        <p>📱 ${phone}</p>
+        <p>🎉 Event: ${event}</p>
+        <p>📅 Date: ${date}</p>
+        <p>📍 Location: ${location}</p>
+        <p>💰 Total: ₹${total}</p>
+        <p>💵 Advance: ₹${advance}</p>
+        <p>🧾 Remaining: ₹${remaining}</p>
+        <p>📌 Status: ${status}</p>
+
+        <label>Booking Status</label>
+        <select class="status">
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>Completed</option>
+          <option>Cancelled</option>
+        </select>
+
+        <button class="updateStatus">Update Status</button>
+        <button class="editAmount">Edit Total Amount</button>
+      `;
+
+      const select=card.querySelector(".status");
+      select.value=status;
+
+      card.querySelector(".updateStatus").onclick=async()=>{
+        try{
+          await doc.ref.update({"Booking Status":select.value});
+          alert("Booking status updated!");
+          loadBookings();
+        }catch(e){
+          alert(e.message);
+        }
+      };
+
+      card.querySelector(".editAmount").onclick=async()=>{
+        const newAmount=prompt("Enter Total Amount",total);
+        if(newAmount===null)return;
+
+        try{
+          const amount=Number(newAmount);
+          await doc.ref.update({
+            "Total Amount":amount,
+            "Remaining Amount":amount-Number(advance)
+          });
+          alert("Amount updated!");
+          loadBookings();
+        }catch(e){
+          alert(e.message);
+        }
+      };
+
+      list.appendChild(card);
+    });
+
+  }catch(error){
+    list.innerHTML="Error: "+error.message;
+  }
+}
+</script>
+
+</body>
+</html>
