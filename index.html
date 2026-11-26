@@ -32,23 +32,25 @@ footer{text-align:center;color:#705a67;padding:20px;font-size:.85rem}.back-btn{w
 #splashScreen img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 main{
   position:relative;
-  isolation:isolate;
 }
 
 main::before{
   content:"";
-  position:absolute;
+  position:fixed;
   inset:0;
-  background:url('mandap-watermark.png') center center/100% auto no-repeat;
-  opacity:0.22;
+  background-image:url('mandap-watermark.png');
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:contain;
+  opacity:0.12;
   pointer-events:none;
-  z-index:-0;
+  z-index:1;
 }
 
-main > section,
-main > form{
+main section{
   position:relative;
-}
+  z-index:2;
+  }
 </style>
 </head>
 <body>
