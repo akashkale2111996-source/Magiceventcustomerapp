@@ -146,6 +146,7 @@ async function loadBookings(){
         <button class="editAmount">Edit Total Amount</button>
         <button class="editAdvance">Edit Advance Payment</button>
         <button class="editDetails">Edit Booking Details</button>
+        <button class="addPayment">➕ Add Payment</button>
         <button class="paymentHistory">Payment History</button>
       `;
 
@@ -255,7 +256,57 @@ card.querySelector(".editAdvance").onclick=async()=>{
     alert(e.message);
   }
 };    
+card.querySelector(".addPayment").onclick=async()=>{
+  const payment=prompt("Enter Payment Amount");
+  if(payment===null)return;
 
+  const amount=Number(payment);
+  if(isNaN(amount)||amount<=0){
+    alert("Invalid payment amount");
+    return;
+  }
+
+  const method=prompt("Payment Method (Cash/UPI/Bank)","UPI");
+  if(method===null)return;
+
+  const note=prompt("Payment Note","Advance Payment");
+  if(note===null)return;
+
+  try{
+    const fresh=await doc.ref.get();
+    const data=fresh.data();
+
+    const total=Number(data["Total Amount"]||0);
+    const oldAdvance=Number(data["Advance Amount"]||0);
+    const newAdvance=oldAdvance+amount;
+
+    if(newAdvance>total){
+      alert("Payment exceeds remaining amount!");
+      return;
+    }
+
+    const history=data["Payment History"]||[];
+
+    history.push({
+      amount:amount,
+      date:new Date().toLocaleDateString("en-IN"),
+      method:method,
+      note:note
+    });
+
+    await doc.ref.update({
+      "Advance Amount":newAdvance,
+      "Remaining Amount":total-newAdvance,
+      "Payment History":history
+    });
+
+    alert("Payment saved successfully!");
+    loadBookings();
+
+  }catch(e){
+    alert(e.message);
+  }
+};
     
       list.appendChild(card);
     });
