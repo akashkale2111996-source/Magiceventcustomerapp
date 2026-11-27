@@ -110,5 +110,23 @@ async function sharePaymentScreenshot(){const utr=document.getElementById('payme
 function payNow(){const u='upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent(UPI_NAME)+'&cu=INR';window.location.href=u;}
 renderGalleryFolders();showSavedBookings();go('home');
 </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const customerFirebaseConfig = {
+  apiKey: "AIzaSyDOKaxY_kqS-SGGhVU-DWcerx8wmRYmJxk",
+  authDomain: "magiceventsadmin.firebaseapp.com",
+  projectId: "magiceventsadmin",
+  storageBucket: "magiceventsadmin.firebasestorage.app",
+  messagingSenderId: "129450507612",
+  appId: "1:129450507612:web:56ede0b1b409478e781599"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(customerFirebaseConfig);
+}
+
+const customerDB = firebase.firestore();
+</script>
 </body>
 </html>
