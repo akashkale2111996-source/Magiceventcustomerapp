@@ -69,7 +69,10 @@ window.addEventListener('load',function(){setTimeout(function(){const s=document
 <label>Payment Note
 <textarea id="paymentNote" placeholder="Payment details (optional)"></textarea>
 </label> Screenshot<input type="file" id="paymentScreenshot" accept="image/*"></label><button onclick="sharePaymentScreenshot()" class="secondary" style="width:100%;margin-top:10px">📷 Share Payment Screenshot</button></div></div></section>
-<section id="contact"><div class="wrap"><h2>📞 Contact Us</h2><div class="cards"><div class="card"><h3>Call Us</h3><a href="tel:9762627656" class="btn">📱 9762627656</a></div><div class="card"><h3>WhatsApp</h3><a href="https://wa.me/919762627656" class="btn">💬 WhatsApp Us</a></div><div class="card"><h3>Other Numbers</h3><p>7040453659</p><p>8669262653</p></div></div></div></section>
+<button onclick="submitPaymentForApproval()" style="width:100%;margin-top:10px;background:#c99a82">
+📤 Submit Payment for Admin Approval
+</button>
+  <section id="contact"><div class="wrap"><h2>📞 Contact Us</h2><div class="cards"><div class="card"><h3>Call Us</h3><a href="tel:9762627656" class="btn">📱 9762627656</a></div><div class="card"><h3>WhatsApp</h3><a href="https://wa.me/919762627656" class="btn">💬 WhatsApp Us</a></div><div class="card"><h3>Other Numbers</h3><p>7040453659</p><p>8669262653</p></div></div></div></section>
 </main><footer>Magic Events & Decorators<br>Wedding • Birthday • Decoration • Catering</footer>
 <nav class="bottom-nav"><button onclick="go('home')" id="nav-home">🏠 Home</button><button onclick="go('services')" id="nav-services">🎉 Services</button><button onclick="go('gallery')" id="nav-gallery">🖼 Gallery</button><button onclick="go('booking')" id="nav-booking">📝 Book</button><button onclick="go('payment')" id="nav-payment">💰 Pay</button><button onclick="go('contact')" id="nav-contact">📞 Contact</button></nav>
 <script>
@@ -119,7 +122,41 @@ function saveEditedBooking(){let bs=JSON.parse(localStorage.getItem('magicBookin
 function closeEditBooking(){document.getElementById('editBookingModal').style.display='none';}
 document.getElementById('bookingForm').addEventListener('submit',function(e){e.preventDefault();const d=new FormData(this);const name=(d.get('name')||'').trim(),phone=(d.get('phone')||'').trim(),event=d.get('event')||'',date=d.get('date')||'',location=d.get('location')||'Not mentioned',budget=d.get('budget')||'Not mentioned',details=d.get('details')||'Not mentioned',photoName=d.get('galleryPhotoName')||'',photoUrl=d.get('galleryPhotoUrl')||'',videoUrl=d.get('galleryVideoUrl')||'';if(!/^\d{10}$/.test(phone)){alert('Please enter a valid 10-digit mobile number.');return;}let msg='✨ MAGIC EVENTS & DECORATORS ✨\n\n📋 NEW BOOKING ENQUIRY\n\n👤 Name: '+name+'\n📱 Phone: '+phone+'\n🎉 Event: '+event+'\n📅 Date: '+date+'\n📍 Location: '+location+'\n💰 Budget: '+budget+'\n📝 Details: '+details;if(photoName)msg+='\n🖼 Selected Photo: '+photoName;if(photoUrl)msg+='\n📷 Gallery Photo Link: '+photoUrl;if(videoUrl)msg+='\n🎥 Video Link: '+videoUrl;msg+='\n\nThank you! 🙏';saveBookingRecord({name,phone,event,date,location,budget,details,photoName,photoUrl,videoUrl});showSavedBookings();window.open('https://wa.me/'+WHATSAPP_NUMBER+'?text='+encodeURIComponent(msg),'_blank');});
 async function sharePaymentScreenshot(){const utr=document.getElementById('paymentUTR').value.trim(),file=document.getElementById('paymentScreenshot').files[0];if(!utr){alert('Please enter Transaction ID / UTR.');return;}if(!file){alert('Please select payment screenshot.');return;}const msg='💰 PAYMENT CONFIRMATION\n\nMagic Events & Decorators\nUPI ID: '+UPI_ID+'\nTransaction ID: '+utr+'\nPayment screenshot attached.\nThank you! 🙏';try{if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({title:'Payment Confirmation',text:msg,files:[file]});else alert('This phone/browser cannot share screenshot and text together.');}catch(e){if(e.name!=='AbortError')alert('Sharing failed. Please try again.');}}
-function payNow(){const u='upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent(UPI_NAME)+'&cu=INR';window.location.href=u;}
+async function submitPaymentForApproval(){
+  const amount = document.getElementById('paymentAmount').value;
+  const utr = document.getElementById('paymentUTR').value.trim();
+  const method = document.getElementById('paymentMethod').value;
+  const note = document.getElementById('paymentNote').value.trim();
+
+  if(!amount || Number(amount) <= 0){
+    alert('Please enter a valid payment amount.');
+    return;
+  }
+
+  if(!utr){
+    alert('Please enter UTR / Transaction ID.');
+    return;
+  }
+
+  try{
+    await customerDB.collection('PendingPayments').add({
+      amount: Number(amount),
+      utr: utr,
+      method: method,
+      note: note,
+      customerName: document.querySelector('[name="name"]').value.trim(),
+      customerPhone: document.querySelector('[name="phone"]').value.trim(),
+      status: 'Pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert('Payment submitted successfully! Waiting for Admin Approval 🙏');
+  }catch(error){
+    console.error(error);
+    alert('Payment submission failed: ' + error.message);
+  }
+}
+  function payNow(){const u='upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent(UPI_NAME)+'&cu=INR';window.location.href=u;}
 renderGalleryFolders();showSavedBookings();go('home');
 </script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
