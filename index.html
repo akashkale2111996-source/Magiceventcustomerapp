@@ -144,8 +144,8 @@ async function submitPaymentForApproval(){
       utr: utr,
       method: method,
       note: note,
-      customerName: document.querySelector('[name="name"]').value.trim(),
-      customerPhone: document.querySelector('[name="phone"]').value.trim(),
+      customerName: document.querySelector('#bookingForm [name="name"]').value.trim(),
+customerPhone: document.querySelector('#bookingForm [name="phone"]').value.trim(),
       status: 'Pending',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
