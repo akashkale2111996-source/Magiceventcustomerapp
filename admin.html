@@ -186,7 +186,7 @@ async function confirmPayment(paymentId){
   }
 }
 
-}
+
 async function rejectPayment(paymentId){
   const reason=prompt("Reason for rejecting (optional):","Payment verification failed");if(reason===null)return;
   try{await db.collection("PendingPayments").doc(paymentId).update({status:"Rejected",rejectionReason:reason,rejectedAt:firebase.firestore.FieldValue.serverTimestamp()});alert("Payment rejected.");loadPendingPayments();}
