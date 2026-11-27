@@ -81,30 +81,111 @@ async function loadPendingPayments(){
     box.innerHTML=html;
   }catch(error){box.innerHTML="<div class='card'>Error loading payments: "+esc(error.message)+"</div>";}
 }
+
 async function confirmPayment(paymentId){
-  if(!confirm("Confirm this payment? It will be added to the matching booking if found."))return;
+  if(!confirm("Confirm this payment and add it to the matching booking?")) return;
+
   try{
-    const paymentRef=db.collection("PendingPayments").doc(paymentId),paymentSnap=await paymentRef.get();
-    if(!paymentSnap.exists){alert("Payment record not found.");return;}
-    const p=paymentSnap.data();if(p.status!=="Pending"){alert("This payment is already processed.");loadPendingPayments();return;}
-    const amount=Number(p.amount||0);if(!Number.isFinite(amount)||amount<=0){alert("Invalid payment amount.");return;}
-    const phone=String(p.customerPhone||"").trim();let bookingDoc=null;
-    if(phone){
-      let bookings=await db.collection("Bookings").where("Customer phone","==",phone).get();
-      if(bookings.empty)bookings=await db.collection("Bookings").where("phone","==",phone).get();
-      if(!bookings.empty)bookingDoc=bookings.docs[0];
+    const paymentRef = db.collection("PendingPayments").doc(paymentId);
+    const paymentSnap = await paymentRef.get();
+
+    if(!paymentSnap.exists){
+      alert("Payment record not found.");
+      return;
     }
-    if(bookingDoc){
-      const bookingData=bookingDoc.data(),total=Number(bookingData["Total Amount"]||0),oldAdvance=Number(bookingData["Advance Amount"]||0),newAdvance=oldAdvance+amount;
-      if(newAdvance>total){alert("This payment would exceed the booking total. Please check the booking amount first.");return;}
-      const history=Array.isArray(bookingData["Payment History"])?bookingData["Payment History"]:[];
-      history.push({amount,date:p.date||new Date().toLocaleDateString("en-IN"),method:p.method||"-",note:p.note||"Customer payment",source:"PendingPaymentApproval"});
-      await bookingDoc.ref.update({"Advance Amount":newAdvance,"Remaining Amount":total-newAdvance,"Payment History":history});
+
+    const p = paymentSnap.data();
+
+    if(p.status !== "Pending"){
+      alert("This payment is already processed.");
+      loadPendingPayments();
+      return;
     }
-    await paymentRef.update({status:"Confirmed",confirmedAt:firebase.firestore.FieldValue.serverTimestamp()});
-    alert(bookingDoc?"Payment confirmed and added to booking!":"Payment confirmed. No matching booking was found, so it was not added to a booking.");
-    loadBookings();loadPendingPayments();
-  }catch(error){alert("Could not confirm payment: "+error.message);}
+
+    const amount = Number(p.amount || 0);
+    if(!Number.isFinite(amount) || amount <= 0){
+      alert("Invalid payment amount.");
+      return;
+    }
+
+    const phone = String(p.customerPhone || "").trim();
+
+    if(!phone){
+      alert("Customer mobile number is missing. Payment cannot be confirmed.");
+      return;
+    }
+
+    let bookings = await db.collection("Bookings")
+      .where("Customer phone","==",phone).get();
+
+    if(bookings.empty){
+      bookings = await db.collection("Bookings")
+        .where("phone","==",phone).get();
+    }
+
+    if(bookings.empty){
+      alert("No matching booking found. Payment is NOT confirmed.");
+      return;
+    }
+
+    if(bookings.size > 1){
+      alert("Multiple bookings found for this mobile number. Please check the booking before confirming.");
+      return;
+    }
+
+    const bookingDoc = bookings.docs[0];
+    const bookingRef = bookingDoc.ref;
+
+    await db.runTransaction(async (transaction) => {
+      const freshPayment = await transaction.get(paymentRef);
+      const freshBooking = await transaction.get(bookingRef);
+
+      if(!freshPayment.exists || freshPayment.data().status !== "Pending"){
+        throw new Error("Payment already processed.");
+      }
+
+      const b = freshBooking.data();
+      const total = Number(b["Total Amount"] || 0);
+      const oldAdvance = Number(b["Advance Amount"] || 0);
+      const newAdvance = oldAdvance + amount;
+
+      if(newAdvance > total){
+        throw new Error("Payment exceeds booking total.");
+      }
+
+      const history = Array.isArray(b["Payment History"])
+        ? [...b["Payment History"]]
+        : [];
+
+      history.push({
+        amount: amount,
+        date: new Date().toLocaleDateString("en-IN"),
+        method: p.method || "-",
+        note: p.note || "Customer payment",
+        source: "PendingPaymentApproval"
+      });
+
+      transaction.update(bookingRef,{
+        "Advance Amount": newAdvance,
+        "Remaining Amount": total - newAdvance,
+        "Payment History": history
+      });
+
+      transaction.update(paymentRef,{
+        status: "Confirmed",
+        confirmedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+
+    alert("Payment confirmed and added to booking!");
+    loadBookings();
+    loadPendingPayments();
+
+  }catch(error){
+    alert("Could not confirm payment: " + error.message);
+  }
+}
+
 }
 async function rejectPayment(paymentId){
   const reason=prompt("Reason for rejecting (optional):","Payment verification failed");if(reason===null)return;
